@@ -1,0 +1,122 @@
+\documentclass[border=12pt]{standalone}
+\usepackage[fontset=windows]{ctex}
+\usepackage{amsmath}
+\usepackage{tikz}
+\usetikzlibrary{calc,arrows.meta,angles,quotes}
+
+\begin{document}
+\begin{tikzpicture}[
+    x=1cm, y=1cm,
+    line cap=round, line join=round,
+    every node/.style={font=\small},
+    lamp/.style={draw=orange!70!black, fill=yellow!75, line width=0.6pt},
+    lens/.style={draw=black!80, fill=cyan!10, line width=0.8pt},
+    ray in/.style={draw=yellow!48!black, line width=0.95pt, -{Stealth[length=2.15mm,width=1.55mm]}},
+    ray a/.style={draw=orange!95!black, line width=0.9pt, -{Stealth[length=2.15mm,width=1.55mm]}},
+    ray b/.style={draw=red!72!black, line width=0.9pt, dash pattern=on 3.2pt off 1.5pt, -{Stealth[length=2.15mm,width=1.55mm]}},
+    tag/.style={fill=white, inner sep=1.6pt, outer sep=0pt},
+    dim/.style={draw=black!65, -{Stealth[length=1.6mm]}, thin}
+  ]
+  \def\xL{6.0}
+  \def\xG{11.15}
+  \def\tilt{23.4}
+  \def\lensH{1.92}
+  \coordinate (G) at (\xG,0);
+  \coordinate (S) at (0,0);
+  \coordinate (C) at (\xL,0);
+
+  % ---------- 标题 ----------
+  \node[font=\normalsize\bfseries] at (5.35,3.15) {光盘光谱仪的李特罗全光路};
+  \node[font=\footnotesize, text=black!70] at (5.35,2.72)
+    {准直与探测共用同一块透镜；钠双线的夹角和离轴量都已夸大};
+
+  % ---------- 焦平面、狭缝、探测器 ----------
+  \draw[black!35, thin] (0,0.95) -- (0,2.25);
+  \draw[line width=1.35pt] (0,-1.55) -- (0,-0.16);
+  \draw[line width=1.35pt] (0,0.16) -- (0,0.78);
+  \node[tag, anchor=north] at (0,-1.62) {入射狭缝};
+
+  \draw[fill=black!78, draw=black] (-0.02,1.12) rectangle (0.20,2.08);
+  \fill[orange!95!black] (0.09,1.276) circle (1.35pt);
+  \fill[red!72!black] (0.09,1.834) circle (1.35pt);
+  \node[tag, anchor=south, font=\footnotesize] at (0.09,2.16) {CMOS};
+
+  \node[tag, anchor=east, font=\footnotesize, text=orange!95!black] at (-0.14,1.28)
+    {$589.0\,\mathrm{nm}$};
+  \node[tag, anchor=east, font=\footnotesize, text=red!72!black] at (-0.14,1.83)
+    {$589.6\,\mathrm{nm}$};
+
+  % ---------- 钠灯 ----------
+  \draw[lamp] (-2.85,0) circle (0.34);
+  \foreach \ang in {-16,-8,0,8,16}
+    \draw[orange!80!black, thin] (-2.50,0) -- ++({0.62*cos(\ang)},{0.62*sin(\ang)});
+  \node[tag, anchor=north] at (-2.85,-0.46) {低压钠灯};
+
+  % ---------- 透镜 ----------
+  \draw[lens]
+    (\xL,\lensH)
+    .. controls (\xL-0.46,1.15) and (\xL-0.46,-1.15) .. (\xL,-\lensH)
+    .. controls (\xL+0.46,-1.15) and (\xL+0.46,1.15) .. cycle;
+  \node[tag, anchor=south] at (\xL,2.05) {消色差透镜};
+
+  % ---------- 光栅 ----------
+  \begin{scope}[rotate around={\tilt:(G)}]
+    \draw[black!35, line width=1.1pt] ($(G)+(0.14,-1.82)$) -- ($(G)+(0.14,1.82)$);
+    \draw[black!85, line width=2.3pt] ($(G)+(0,-1.82)$) -- ($(G)+(0,1.82)$);
+    \foreach \s in {-1.45,-1.05,...,1.55}
+      \draw[black!75, line width=0.45pt] ($(G)+(-0.02,\s)$) -- ($(G)+(-0.20,\s)$);
+  \end{scope}
+  \node[tag, anchor=west] at (12.05,0.55) {光盘光栅};
+  \node[tag, anchor=west, font=\footnotesize] at (12.05,0.05) {刻槽朝向透镜};
+
+  % ---------- 入射：发散后变为平行 ----------
+  \foreach \y/\name in {-0.60/a, 0/b, 0.65/c} {
+    \pgfmathsetmacro{\hx}{\xG - \y*tan(\tilt)}
+    \coordinate (H\name) at (\hx,\y);
+    \draw[ray in] (S) -- (\xL,\y);
+    \draw[ray in] (\xL,\y) -- (H\name);
+  }
+  \node[tag] at (8.55,-1.05) {平行光};
+
+  % ---------- 返回：两个波长 ----------
+  \foreach \y/\name in {-0.60/a, 0/b} {
+    \pgfmathsetmacro{\hx}{\xG - \y*tan(\tilt)}
+    \pgfmathsetmacro{\yLa}{\y + (\hx-\xL)*tan(12)}
+    \pgfmathsetmacro{\yLb}{\y + (\hx-\xL)*tan(17)}
+    \draw[ray a] (\hx,\y) -- (\xL,\yLa);
+    \draw[ray a] (\xL,\yLa) -- (0,{ \xL*tan(12) });
+    \draw[ray b] (\hx,\y) -- (\xL,\yLb);
+    \draw[ray b] (\xL,\yLb) -- (0,{ \xL*tan(17) });
+  }
+
+  % ---------- 法线与李特罗角 ----------
+  \coordinate (AxisL) at ($(G)+(-1.85,0)$);
+  \coordinate (Nend) at ($(G)+({-1.25*cos(\tilt)},{-1.25*sin(\tilt)})$);
+  \draw[dashed, black!60] (G) -- (Nend);
+  \node[tag, font=\footnotesize, anchor=north east] at ($(Nend)+(-0.02,-0.02)$) {法线};
+  \pic[draw=black!70, line width=0.6pt, angle radius=8mm, angle eccentricity=1.55,
+       "$\alpha$"{font=\footnotesize}] {angle = AxisL--G--Nend};
+
+  % ---------- 零级 ----------
+  \coordinate (Z) at ($(G)+({2.15*(-0.685)},{2.15*(-0.729)})$);
+  \draw[black!45, thin, dashed, -{Stealth[length=1.7mm]}] (G) -- (Z);
+  \node[tag, font=\footnotesize, anchor=north west, text=black!65] at (Z) {零级，不进透镜};
+
+  % ---------- 焦距 ----------
+  \draw[dim] (0,-2.45) -- (\xL,-2.45);
+  \draw[dim] (\xL,-2.45) -- (0,-2.45);
+  \node[tag, font=\footnotesize] at (3.0,-2.45) {$f=200\,\mathrm{mm}$};
+
+  % ---------- 图例与说明 ----------
+  \draw[ray in] (0.15,-3.35) -- (1.25,-3.35);
+  \node[anchor=west, font=\footnotesize] at (1.35,-3.35) {入射并准直};
+  \draw[ray a] (3.55,-3.35) -- (4.65,-3.35);
+  \node[anchor=west, font=\footnotesize, text=orange!95!black] at (4.75,-3.35) {$589.0\,\mathrm{nm}$};
+  \draw[ray b] (6.85,-3.35) -- (7.95,-3.35);
+  \node[anchor=west, font=\footnotesize, text=red!72!black] at (8.05,-3.35) {$589.6\,\mathrm{nm}$};
+
+  \node[font=\footnotesize, text=black!65, anchor=north west, align=left, text width=14.6cm]
+    at (0.15,-3.72)
+    {CMOS 卸掉镜头，放在焦平面上。实际双线角距约 $0.05^\circ$，图中返回光束的分开是为了能看清。长度也未按 $200\,\mathrm{mm}$ 作图。};
+\end{tikzpicture}
+\end{document}
