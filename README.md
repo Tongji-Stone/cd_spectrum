@@ -9,7 +9,10 @@ Data tracks on optical media (e.g. CDs / Blu-ray discs) behave as high-quality r
 
 
 ### 因素分析
-#### 光路
+![alt text](image.png)
+#### 光路(透镜/光束在光盘上的位置)
 #### 光盘光栅常数(cd/dvd/bd/hd-dvd)
-#### 光盘
+#### 光盘型号()
 #### 相机分辨率
+#### 品牌...
+#### 写入与否(光栅连续性)
