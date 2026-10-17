@@ -19,6 +19,10 @@
     select,input[type=range] { width:100%; margin-top:7px; }
     select { padding:8px; color:var(--text); background:#101722; border:1px solid var(--line); border-radius:6px; }
     input[type=range] { accent-color:var(--accent); }
+    .parameter-guide { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1px; margin:-8px 0 20px; overflow:hidden; background:var(--line); border:1px solid var(--line); border-radius:10px; }
+    .parameter-item { padding:10px 12px; background:#131a25; color:var(--muted); font-size:12px; }
+    .parameter-item b { color:var(--text); font-size:13px; }
+    .source-info { flex:1 0 100%; padding:8px 10px; color:#bdd9ef; background:#111a26; border-radius:7px; font-size:12px; }
     .section-title { margin:20px 0 10px; display:flex; justify-content:space-between; gap:16px; align-items:baseline; }
     .section-title p { color:var(--muted); font-size:13px; text-align:right; }
     .ray-card { background:var(--panel); border:1px solid var(--line); border-radius:12px; overflow:hidden; }
@@ -39,8 +43,8 @@
     .legend { display:flex; flex-wrap:wrap; gap:12px; margin-top:10px; color:var(--muted); font-size:12px; }
     .dot { display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:5px; }
     .status { color:var(--accent); min-height:22px; margin-top:10px; }
-    @media(max-width:900px) { .controls { grid-template-columns:repeat(3,minmax(0,1fr)); } .models { grid-template-columns:1fr; } canvas { height:320px; } .bottom { grid-template-columns:1fr; } .section-title { display:block; } .section-title p { text-align:left; } }
-    @media(max-width:520px) { main { padding:14px; } .controls { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+    @media(max-width:900px) { .controls { grid-template-columns:repeat(3,minmax(0,1fr)); } .parameter-guide { grid-template-columns:repeat(2,minmax(0,1fr)); } .models { grid-template-columns:1fr; } canvas { height:320px; } .bottom { grid-template-columns:1fr; } .section-title { display:block; } .section-title p { text-align:left; } }
+    @media(max-width:520px) { main { padding:14px; } .controls { grid-template-columns:repeat(2,minmax(0,1fr)); } .parameter-guide { grid-template-columns:1fr; } }
   </style>
 </head>
 <body>
@@ -54,9 +58,38 @@
     <label>照明光斑直径<span class="value" id="spotV"></span><input id="spot" type="range" min="1" max="16" step="0.5" value="6"></label>
     <label>光斑中心半径<span class="value" id="radiusV"></span><input id="radius" type="range" min="20" max="58" step="1" value="40"></label>
     <label>狭缝宽度<span class="value" id="slitV"></span><input id="slit" type="range" min="10" max="200" step="5" value="50"></label>
-    <label>光束发散（角宽）<span class="value" id="divV"></span><input id="divergence" type="range" min="0" max="2" step="0.05" value="0.15"></label>
-    <label>光源<select id="source"><option value="mono">单色光 · 589 nm</option><option value="sodium">钠双线 · 589.0 / 589.6 nm</option><option value="white" selected>等能量白光 · 405–695 nm</option></select></label>
+    <label>光束发散（1σ 角宽）<span class="value" id="divV"></span><input id="divergence" type="range" min="0" max="2" step="0.05" value="0.15"></label>
+    <label>光源<select id="source">
+      <optgroup label="连续光源">
+        <option value="white" selected>等能量白光 · 几何基准</option>
+        <option value="tungsten">钨卤素灯 · 约 3000 K</option>
+        <option value="xenon">氙弧灯 · 可见连续谱</option>
+      </optgroup>
+      <optgroup label="钠灯与常用谱灯">
+        <option value="sodiumLow">低压钠灯 · Na D 双线</option>
+        <option value="sodiumHigh">高压钠灯 · 展宽自反转 D 带</option>
+        <option value="mercury">低压汞灯 · Hg 线谱</option>
+        <option value="hydrogen">氢放电灯 · Balmer 线</option>
+        <option value="cadmium">镉灯 · Cd 标定线</option>
+        <option value="mono">理想单色光 · 589 nm</option>
+      </optgroup>
+      <optgroup label="稀有气体放电灯">
+        <option value="helium">氦灯 · He I</option>
+        <option value="neon">氖灯 · Ne I</option>
+        <option value="argon">氩灯 · Ar I</option>
+        <option value="krypton">氪灯 · Kr I</option>
+      </optgroup>
+    </select></label>
     <label>反射衍射级次<select id="order"><option value="1" selected>+1 级</option><option value="-1">−1 级</option></select></label>
+  </section>
+
+  <section class="parameter-guide" aria-label="几何参数说明">
+    <div class="parameter-item"><b>d　光盘轨距</b><br>盘面内相邻数据轨道的距离，决定不同波长分开的角度。</div>
+    <div class="parameter-item"><b>α　入射角</b><br>入射主光线与光盘表面法线之间的夹角。</div>
+    <div class="parameter-item"><b>D　照明光斑直径</b><br>光束在光盘上照亮区域的直径，决定同时参与衍射的轨道范围。</div>
+    <div class="parameter-item"><b>R　光斑中心半径</b><br>光盘圆心到光斑中心的距离；R 越小，轨道在光斑内弯得越明显。</div>
+    <div class="parameter-item"><b>a　狭缝宽度</b><br>入射狭缝的物理宽度；越窄谱线越细，但进入系统的光越少。</div>
+    <div class="parameter-item"><b>Δα　光束发散角宽</b><br>模型中取入射方向的 1σ 角度分布；越大越容易把谱线抹宽。</div>
   </section>
 
   <div class="section-title"><h2>① 侧视光路</h2><p>先看光从哪里来、以什么角度打到盘上，以及不同波长反射到哪里。</p></div>
@@ -96,14 +129,64 @@
   }
   const diskSamples=makeDiskSamples(SPATIAL_SAMPLES);
 
+  const sourceMeta={
+    white:{label:'等能量白光',description:'405–695 nm 各波长等权，用来单独比较光路几何。'},
+    tungsten:{label:'钨卤素灯',description:'约 3000 K 黑体连续谱，红光较强、蓝光较弱。'},
+    xenon:{label:'氙弧灯',description:'近似日光色的宽连续谱；此处只模拟可见区包络。'},
+    sodiumLow:{label:'低压钠灯',description:'以 588.995 nm 和 589.592 nm 的 Na D 双线为主，适合检验分辨率。'},
+    sodiumHigh:{label:'高压钠灯',description:'Na D 区因压力展宽并出现自反转；形状会随灯温、Na/Hg 压力而变。'},
+    mercury:{label:'低压汞灯',description:'采用 404.7、435.8、546.1、577.0、579.1 nm 等常用可见标定线。'},
+    hydrogen:{label:'氢放电灯',description:'采用可见 Balmer 线 Hδ、Hγ、Hβ、Hα。'},
+    cadmium:{label:'镉灯',description:'采用 467.8、480.0、508.6、643.8 nm 等常用标定线。'},
+    mono:{label:'理想单色光',description:'单一 589.0 nm，用来直接观察几何像差。'},
+    helium:{label:'氦放电灯',description:'代表性 He I 可见线，包含强黄线 587.6 nm。'},
+    neon:{label:'氖放电灯',description:'橙红区密集 Ne I 线，视觉上呈典型橙红色。'},
+    argon:{label:'氩放电灯',description:'蓝紫线与 696.5 nm 红线的代表性组合。'},
+    krypton:{label:'氪放电灯',description:'蓝、绿、黄、红区均有代表性 Kr I 线。'}
+  };
+
+  function normalizedSpectrum(items) {
+    const max=Math.max(...items.map(item=>item.weight),1e-12);
+    return items.map(item=>({nm:item.nm,weight:item.weight/max}));
+  }
+
+  function lineSpectrum(lines) {
+    return normalizedSpectrum(lines.map(([nm,weight])=>({nm,weight})));
+  }
+
+  function sampledContinuum(weightFunction, start=405, end=695, step=2) {
+    const values=[];
+    for(let nm=start;nm<=end;nm+=step) values.push({nm,weight:weightFunction(nm)});
+    return normalizedSpectrum(values);
+  }
+
   function wavelengths() {
     const source = el('source').value;
-    if (source === 'mono') return [{nm:589.0, weight:1}];
-    if (source === 'sodium') return [{nm:589.0, weight:0.52},{nm:589.6, weight:0.48}];
-    const result = [];
-    // Equal-energy white light isolates the geometrical effect. It is not a lamp spectrum.
-    for (let nm=405; nm<=695; nm+=2) result.push({nm, weight:1});
-    return result;
+    if(source==='mono') return [{nm:589.0,weight:1}];
+    if(source==='white') return sampledContinuum(()=>1);
+    if(source==='tungsten') {
+      const temperature=3000, c2=1.438776877e-2;
+      return sampledContinuum(nm=>{
+        const lambda=nm*1e-9;
+        return 1/(Math.pow(lambda,5)*(Math.exp(c2/(lambda*temperature))-1));
+      });
+    }
+    if(source==='xenon') return sampledContinuum(nm=>0.72+0.24*Math.exp(-0.5*((nm-475)/95)**2)+0.08*Math.sin(nm*0.13)**2);
+    if(source==='sodiumLow') return lineSpectrum([[588.995,1],[589.592,0.5]]);
+    if(source==='sodiumHigh') return sampledContinuum(nm=>{
+      const broad=0.035+1.05*Math.exp(-0.5*((nm-589.3)/20)**2);
+      const reversal=0.72*Math.exp(-0.5*((nm-589.3)/1.7)**2);
+      const satellites=0.16*Math.exp(-0.5*((nm-568.5)/1.0)**2)+0.12*Math.exp(-0.5*((nm-615.8)/1.2)**2);
+      return Math.max(0.018,broad-reversal+satellites);
+    },520,680,1);
+    if(source==='mercury') return lineSpectrum([[404.656,0.38],[435.833,1],[546.074,0.85],[576.960,0.42],[579.067,0.48]]);
+    if(source==='hydrogen') return lineSpectrum([[410.174,0.22],[434.046,0.38],[486.133,0.62],[656.281,1]]);
+    if(source==='cadmium') return lineSpectrum([[467.816,0.72],[479.991,0.55],[508.582,1],[643.847,0.82]]);
+    if(source==='helium') return lineSpectrum([[402.619,0.18],[438.793,0.16],[447.148,0.55],[471.314,0.20],[492.193,0.16],[501.568,0.42],[587.562,1],[667.815,0.48]]);
+    if(source==='neon') return lineSpectrum([[540.056,0.12],[585.249,1],[588.189,0.42],[594.483,0.58],[603.000,0.70],[607.434,0.32],[609.616,0.42],[614.306,0.72],[616.359,0.48],[621.728,0.66],[626.650,0.82],[630.479,0.36],[633.443,0.58],[638.299,0.82],[640.225,0.92],[650.653,0.68],[653.288,0.40],[659.895,0.58],[667.828,0.72],[671.704,0.34],[692.947,0.52]]);
+    if(source==='argon') return lineSpectrum([[415.859,0.22],[420.067,0.18],[425.936,0.24],[427.217,0.36],[430.010,0.22],[433.356,0.18],[451.073,0.16],[476.487,0.48],[480.602,0.38],[487.986,0.52],[696.543,1]]);
+    if(source==='krypton') return lineSpectrum([[427.397,0.32],[431.958,0.28],[436.264,0.46],[445.392,0.42],[450.235,0.52],[556.222,0.66],[557.029,0.38],[587.092,0.42],[605.612,0.28],[642.102,0.34],[645.629,0.32],[647.097,0.28],[657.007,0.38],[669.923,0.32],[690.468,0.38]]);
+    return sampledContinuum(()=>1);
   }
 
   function spectralRGB(nm) {
@@ -163,9 +246,22 @@
 
   function rayDiagramWavelengths(p) {
     const source=el('source').value;
-    if(source==='mono') return [589];
-    if(source==='sodium') return [589.0,589.6];
-    return [410,450,500,550,590,630,680];
+    if(p.wavelengths.length<=8) return p.wavelengths.map(item=>item.nm);
+    if(['white','tungsten','xenon'].includes(source)) return [410,450,500,550,590,630,680];
+    if(source==='sodiumHigh') return [550,570,585,589,595,615,640];
+    return [...p.wavelengths].sort((a,b)=>b.weight-a.weight).slice(0,7).sort((a,b)=>a.nm-b.nm).map(item=>item.nm);
+  }
+
+  function doubleArrow(ctx,x1,y1,x2,y2,label,labelOffset=0) {
+    const angle=Math.atan2(y2-y1,x2-x1), head=7;
+    ctx.strokeStyle='#7ec8ff'; ctx.fillStyle='#bfe5ff'; ctx.lineWidth=1.5;
+    ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
+    for(const [x,y,a] of [[x1,y1,angle],[x2,y2,angle+Math.PI]]) {
+      ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x+head*Math.cos(a+0.55),y+head*Math.sin(a+0.55)); ctx.moveTo(x,y); ctx.lineTo(x+head*Math.cos(a-0.55),y+head*Math.sin(a-0.55)); ctx.stroke();
+    }
+    const nx=-Math.sin(angle), ny=Math.cos(angle);
+    ctx.font='13px system-ui'; ctx.textAlign='center';
+    ctx.fillText(label,(x1+x2)/2+nx*labelOffset,(y1+y2)/2+ny*labelOffset);
   }
 
   function drawRayDiagram(p) {
@@ -176,7 +272,10 @@
     bg.addColorStop(0,'#0a1019'); bg.addColorStop(1,'#101925');
     ctx.fillStyle=bg; ctx.fillRect(0,0,w,h);
 
-    const P={x:w*0.56,y:h*0.72}, Lin=Math.min(w*0.42,h*1.55), Lout=Math.min(w*0.31,h*1.05);
+    const discY=h*0.72, O={x:w*0.34,y:discY};
+    const radiusFraction=(p.radius-0.020)/0.038;
+    const P={x:O.x+w*(0.13+0.13*radiusFraction),y:discY};
+    const Lin=Math.min(w*0.42,h*1.55), Lout=Math.min(w*0.31,h*1.05);
     const source={x:P.x-Lin*Math.sin(p.alpha),y:P.y-Lin*Math.cos(p.alpha)};
     const point=(a,b,t)=>({x:a.x+(b.x-a.x)*t,y:a.y+(b.y-a.y)*t});
     const slit=point(source,P,0.30), lens=point(source,P,0.52);
@@ -184,12 +283,23 @@
     const px=-uy, py=ux;
 
     // Disc and illuminated footprint.
-    ctx.strokeStyle='#7890ae'; ctx.lineWidth=5; ctx.beginPath(); ctx.moveTo(w*0.40,P.y); ctx.lineTo(w*0.73,P.y); ctx.stroke();
+    ctx.strokeStyle='#7890ae'; ctx.lineWidth=5; ctx.beginPath(); ctx.moveTo(O.x-50,P.y); ctx.lineTo(w*0.78,P.y); ctx.stroke();
+    ctx.fillStyle='#dbe7f7'; ctx.beginPath(); ctx.arc(O.x,O.y,5,0,Math.PI*2); ctx.fill();
+    ctx.font='13px system-ui'; ctx.textAlign='center'; ctx.fillText('光盘圆心 O',O.x,O.y+23);
     const spotPx=Math.max(10,Math.min(95,p.spot/0.016*95));
     const glow=ctx.createLinearGradient(P.x-spotPx/2,0,P.x+spotPx/2,0);
     glow.addColorStop(0,'rgba(126,200,255,0)'); glow.addColorStop(.5,'rgba(126,200,255,.95)'); glow.addColorStop(1,'rgba(126,200,255,0)');
     ctx.strokeStyle=glow; ctx.lineWidth=9; ctx.beginPath(); ctx.moveTo(P.x-spotPx/2,P.y-1); ctx.lineTo(P.x+spotPx/2,P.y-1); ctx.stroke();
-    ctx.fillStyle='#b9c5d6'; ctx.font='15px system-ui'; ctx.textAlign='center'; ctx.fillText('反射光盘（侧面）',P.x,P.y+28);
+    ctx.fillStyle='#b9c5d6'; ctx.font='15px system-ui'; ctx.textAlign='center'; ctx.fillText('光斑中心 P',P.x,P.y+23);
+    doubleArrow(ctx,O.x,P.y+45,P.x,P.y+45,`R = ${(p.radius*1e3).toFixed(0)} mm`,-10);
+    doubleArrow(ctx,P.x-spotPx/2,P.y-15,P.x+spotPx/2,P.y-15,`D = ${(p.spot*1e3).toFixed(1)} mm`,-9);
+
+    // Magnified in-plane track-spacing inset. The micrometre pitch cannot be drawn to scale.
+    const insetX=w*0.82, insetY=P.y-55, pitchPx=25;
+    ctx.fillStyle='#91a2ba'; ctx.font='12px system-ui'; ctx.textAlign='center'; ctx.fillText('盘面轨道局部放大',insetX+38,insetY-26);
+    ctx.strokeStyle='rgba(126,200,255,.72)'; ctx.lineWidth=2;
+    for(let i=0;i<4;i++) { ctx.beginPath(); ctx.moveTo(insetX+i*pitchPx,insetY-16); ctx.lineTo(insetX+i*pitchPx,insetY+16); ctx.stroke(); }
+    doubleArrow(ctx,insetX,insetY+25,insetX+pitchPx,insetY+25,`d = ${(p.d*1e6).toFixed(2)} μm`,13);
 
     // Normal.
     ctx.save(); ctx.setLineDash([8,7]); ctx.strokeStyle='rgba(205,218,237,.65)'; ctx.lineWidth=2;
@@ -201,7 +311,8 @@
     halo.addColorStop(0,'#fff'); halo.addColorStop(.25,'#ffe47a'); halo.addColorStop(1,'rgba(255,212,72,0)');
     ctx.fillStyle=halo; ctx.beginPath(); ctx.arc(source.x,source.y,28,0,Math.PI*2); ctx.fill();
     ctx.fillStyle='#ffe87c'; ctx.beginPath(); ctx.arc(source.x,source.y,8,0,Math.PI*2); ctx.fill();
-    ctx.textAlign='left'; ctx.fillStyle='#e9eef7'; ctx.fillText('光源',source.x+18,source.y-12);
+    const activeSource=sourceMeta[el('source').value] || sourceMeta.white;
+    ctx.textAlign='left'; ctx.fillStyle='#e9eef7'; ctx.fillText(activeSource.label,source.x+18,source.y-12);
 
     // Incident light, slit and collimator.
     ctx.strokeStyle='rgba(255,247,210,.92)'; ctx.lineWidth=3;
@@ -212,10 +323,25 @@
     }
     ctx.strokeStyle='#d7e2f2'; ctx.lineWidth=4;
     ctx.beginPath(); ctx.moveTo(slit.x+px*15,slit.y+py*15); ctx.lineTo(slit.x+px*4,slit.y+py*4); ctx.moveTo(slit.x-px*4,slit.y-py*4); ctx.lineTo(slit.x-px*15,slit.y-py*15); ctx.stroke();
+    doubleArrow(ctx,slit.x+px*4,slit.y+py*4,slit.x-px*4,slit.y-py*4,`a = ${(p.slit*1e6).toFixed(0)} μm（放大）`,20);
     ctx.strokeStyle='#7ec8ff'; ctx.lineWidth=3;
     ctx.beginPath(); ctx.moveTo(lens.x+px*24,lens.y+py*24); ctx.quadraticCurveTo(lens.x+ux*8,lens.y+uy*8,lens.x-px*24,lens.y-py*24); ctx.stroke();
     ctx.fillStyle='#cbd6e6'; ctx.font='14px system-ui'; ctx.textAlign='center';
     ctx.fillText('狭缝',slit.x+px*30,slit.y+py*30); ctx.fillText('准直镜',lens.x+px*36,lens.y+py*36);
+
+    // Incident angular spread around the chief ray; tiny values are enlarged for visibility.
+    const backAngle=Math.atan2(lens.y-P.y,lens.x-P.x), fanLength=Math.hypot(P.x-lens.x,P.y-lens.y);
+    const displayDivergence=p.divergence===0 ? 0 : Math.max(p.divergence,0.6*Math.PI/180);
+    if(displayDivergence>0) {
+      ctx.strokeStyle='rgba(126,200,255,.55)'; ctx.lineWidth=1.5;
+      for(const sign of [-1,1]) {
+        const a=backAngle+sign*displayDivergence/2;
+        ctx.beginPath(); ctx.moveTo(P.x,P.y); ctx.lineTo(P.x+fanLength*Math.cos(a),P.y+fanLength*Math.sin(a)); ctx.stroke();
+      }
+      ctx.beginPath(); ctx.arc(P.x,P.y,78,backAngle-displayDivergence/2,backAngle+displayDivergence/2); ctx.stroke();
+    }
+    ctx.fillStyle='#9fd9ff'; ctx.font='13px system-ui'; ctx.textAlign='left';
+    ctx.fillText(`Δα = ${(p.divergence*180/Math.PI).toFixed(2)}°（1σ）${p.divergence>0&&p.divergence<0.6*Math.PI/180?'，示意放大':''}`,lens.x+18,lens.y-23);
 
     // Angle of incidence.
     ctx.strokeStyle='#8ba0bc'; ctx.lineWidth=1.5; ctx.beginPath(); ctx.arc(P.x,P.y,46,-Math.PI/2-p.alpha,-Math.PI/2); ctx.stroke();
@@ -246,16 +372,23 @@
       ctx.fillStyle='#dbe7f7'; ctx.textAlign='center';
       const center=rays[Math.floor(rays.length/2)].end;
       ctx.fillText('探测屏 / 相机',center.x,Math.max(19,center.y-20));
-      for(const r of rays) {
-        if(samples.length>2 && ![410,500,590,680].includes(r.nm)) continue;
+      const labelIndices=new Set([0,Math.floor((rays.length-1)/3),Math.floor(2*(rays.length-1)/3),rays.length-1]);
+      for(let index=0;index<rays.length;index++) {
+        const r=rays[index];
+        if(rays.length>4&&!labelIndices.has(index)) continue;
         ctx.fillStyle=cssSpectralColor(r.nm); ctx.font='13px system-ui';
-        ctx.fillText(`${r.nm.toFixed(0)} nm`,r.end.x,r.end.y-9);
+        ctx.fillText(`${r.nm.toFixed(rays.length<=2?1:0)} nm`,r.end.x,r.end.y-9);
       }
+      const referenceRay=rays[Math.floor(rays.length/2)], beta=referenceRay.beta;
+      ctx.strokeStyle='#7ec8ff'; ctx.lineWidth=1.5; ctx.beginPath();
+      ctx.arc(P.x,P.y,58,Math.min(-Math.PI/2,-Math.PI/2+beta),Math.max(-Math.PI/2,-Math.PI/2+beta)); ctx.stroke();
+      const betaMid=-Math.PI/2+beta/2;
+      ctx.fillStyle='#bfe5ff'; ctx.fillText(`β = ${(beta*180/Math.PI).toFixed(1)}°`,P.x+78*Math.cos(betaMid),P.y+78*Math.sin(betaMid));
     } else {
       ctx.fillStyle='#ffb36b'; ctx.textAlign='center'; ctx.fillText('当前条件下此级次不能传播',P.x,P.y-95);
     }
     const betaText=rays.length ? `${(Math.min(...rays.map(r=>r.beta))*180/Math.PI).toFixed(1)}° ～ ${(Math.max(...rays.map(r=>r.beta))*180/Math.PI).toFixed(1)}°` : '无';
-    el('rayReadout').innerHTML=`<span>入射角 <b>${(p.alpha*180/Math.PI).toFixed(0)}°</b></span><span>一级反射角范围 <b>${betaText}</b></span><span>轨距 <b>${(p.d*1e6).toFixed(2)} μm</b></span><span>照明光斑 <b>${(p.spot*1e3).toFixed(1)} mm</b></span>`;
+    el('rayReadout').innerHTML=`<span>入射角 <b>${(p.alpha*180/Math.PI).toFixed(0)}°</b></span><span>一级反射角范围 <b>${betaText}</b></span><span>轨距 <b>${(p.d*1e6).toFixed(2)} μm</b></span><span>照明光斑 <b>${(p.spot*1e3).toFixed(1)} mm</b></span><span class="source-info"><b>${activeSource.label}</b>：${activeSource.description}　谱线相对强度仅用于视觉比较。</span>`;
   }
 
   function bilinearSplat(buffers, x, y, value, rgb) {
@@ -452,8 +585,9 @@
       const valid=result.acceptedCount;
       const width=fwhmProfile(result,bounds);
       const geometry=model===0?'无曲率基准':model===1?'环形弯曲':'螺线局部法线';
-      const widthLabel=el('source').value==='white' ? '光源模式' : '中心截面 FWHM';
-      const widthValue=el('source').value==='white' ? '连续白光积分' : (width===null?'—':width.toFixed(3)+'°');
+      const isContinuum=p.wavelengths.length>20;
+      const widthLabel=isContinuum ? '光源模式' : '中心截面 FWHM';
+      const widthValue=isContinuum ? '连续谱积分' : (width===null?'—':width.toFixed(3)+'°');
       el('m'+model).innerHTML=metricHTML('积分光线数',valid.toLocaleString())+metricHTML('几何特征',geometry)+metricHTML(widthLabel,widthValue)+metricHTML('模型级次',`${p.order>0?'+':''}${p.order} 级`);
     }
     const spiralRatio=p.d/(2*Math.PI*p.radius);
