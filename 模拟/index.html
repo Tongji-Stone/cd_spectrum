@@ -1,0 +1,469 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>光盘反射光栅：几何模型比较</title>
+  <style>
+    :root { color-scheme: dark; --bg:#10141c; --panel:#181f2b; --line:#2c3748; --text:#e9eef7; --muted:#9eabc0; --accent:#7ec8ff; }
+    * { box-sizing:border-box; }
+    body { margin:0; background:var(--bg); color:var(--text); font:15px/1.5 system-ui,"Microsoft YaHei",sans-serif; }
+    main { max-width:1440px; margin:auto; padding:24px; }
+    h1 { margin:0 0 5px; font-size:25px; }
+    h2 { margin:0; font-size:17px; }
+    p { margin:5px 0 0; }
+    .sub,.hint { color:var(--muted); }
+    .controls { display:grid; grid-template-columns:repeat(6,minmax(130px,1fr)); gap:12px; margin:20px 0; padding:16px; background:var(--panel); border:1px solid var(--line); border-radius:12px; }
+    label { display:block; color:var(--muted); font-size:13px; }
+    label span.value { float:right; color:var(--text); font-variant-numeric:tabular-nums; }
+    select,input[type=range] { width:100%; margin-top:7px; }
+    select { padding:8px; color:var(--text); background:#101722; border:1px solid var(--line); border-radius:6px; }
+    input[type=range] { accent-color:var(--accent); }
+    .section-title { margin:20px 0 10px; display:flex; justify-content:space-between; gap:16px; align-items:baseline; }
+    .section-title p { color:var(--muted); font-size:13px; text-align:right; }
+    .ray-card { background:var(--panel); border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+    #side { height:330px; }
+    .ray-readout { display:flex; flex-wrap:wrap; gap:18px; padding:10px 15px 13px; border-top:1px solid var(--line); color:var(--muted); font-size:13px; }
+    .ray-readout b { color:var(--text); font-weight:600; }
+    .models { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+    .card { min-width:0; background:var(--panel); border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+    .cardhead { padding:13px 15px 8px; display:flex; justify-content:space-between; gap:8px; align-items:baseline; }
+    .cardhead small { color:var(--muted); }
+    canvas { display:block; width:100%; height:300px; background:#080c12; }
+    .metrics { padding:10px 15px 14px; display:grid; grid-template-columns:1fr 1fr; gap:8px; border-top:1px solid var(--line); font-variant-numeric:tabular-nums; }
+    .metric { color:var(--muted); font-size:12px; }
+    .metric b { display:block; color:var(--text); font-size:14px; font-weight:600; }
+    .bottom { display:grid; grid-template-columns:1.2fr 1fr; gap:12px; margin-top:12px; }
+    .note { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:15px; }
+    .note p { color:var(--muted); font-size:13px; }
+    .legend { display:flex; flex-wrap:wrap; gap:12px; margin-top:10px; color:var(--muted); font-size:12px; }
+    .dot { display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:5px; }
+    .status { color:var(--accent); min-height:22px; margin-top:10px; }
+    @media(max-width:900px) { .controls { grid-template-columns:repeat(3,minmax(0,1fr)); } .models { grid-template-columns:1fr; } canvas { height:320px; } .bottom { grid-template-columns:1fr; } .section-title { display:block; } .section-title p { text-align:left; } }
+    @media(max-width:520px) { main { padding:14px; } .controls { grid-template-columns:repeat(2,minmax(0,1fr)); } }
+  </style>
+</head>
+<body>
+<main>
+  <h1>光盘反射光栅：三种刻线模型</h1>
+  <p class="sub">保持入射条件相同，比较平行刻线、同心圆刻线和螺旋轨道对一级衍射图样的影响。</p>
+
+  <section class="controls" aria-label="模拟条件">
+    <label>光盘轨距 d<select id="pitch"><option value="1.6">CD · 1.60 μm</option><option value="0.74" selected>DVD · 0.74 μm</option><option value="0.32">蓝光 · 0.32 μm</option></select></label>
+    <label>入射角（相对法线）<span class="value" id="angleV"></span><input id="angle" type="range" min="10" max="80" step="1" value="65"></label>
+    <label>照明光斑直径<span class="value" id="spotV"></span><input id="spot" type="range" min="1" max="16" step="0.5" value="6"></label>
+    <label>光斑中心半径<span class="value" id="radiusV"></span><input id="radius" type="range" min="20" max="58" step="1" value="40"></label>
+    <label>狭缝宽度<span class="value" id="slitV"></span><input id="slit" type="range" min="10" max="200" step="5" value="50"></label>
+    <label>光束发散（角宽）<span class="value" id="divV"></span><input id="divergence" type="range" min="0" max="2" step="0.05" value="0.15"></label>
+    <label>光源<select id="source"><option value="mono">单色光 · 589 nm</option><option value="sodium">钠双线 · 589.0 / 589.6 nm</option><option value="white" selected>等能量白光 · 405–695 nm</option></select></label>
+    <label>反射衍射级次<select id="order"><option value="1" selected>+1 级</option><option value="-1">−1 级</option></select></label>
+  </section>
+
+  <div class="section-title"><h2>① 侧视光路</h2><p>先看光从哪里来、以什么角度打到盘上，以及不同波长反射到哪里。</p></div>
+  <section class="ray-card">
+    <canvas id="side" width="1360" height="330" role="img" aria-label="光源经过狭缝和准直镜照到光盘，再按波长向探测屏反射的侧视光路"></canvas>
+    <div class="ray-readout" id="rayReadout" aria-live="polite"></div>
+  </section>
+
+  <div class="section-title"><h2>② 探测器上看到的光谱</h2><p>三幅图使用同一坐标；颜色就是对应波长，不再用灰度强度图。</p></div>
+  <section class="models">
+    <article class="card"><div class="cardhead"><h2>1. 平行划线</h2><small>理想平面光栅</small></div><canvas id="c0" width="440" height="300"></canvas><div class="metrics" id="m0"></div></article>
+    <article class="card"><div class="cardhead"><h2>2. 同心圆划线</h2><small>局部法线随半径转动</small></div><canvas id="c1" width="440" height="300"></canvas><div class="metrics" id="m1"></div></article>
+    <article class="card"><div class="cardhead"><h2>3. 螺线划线</h2><small>阿基米德螺线轨道</small></div><canvas id="c2" width="440" height="300"></canvas><div class="metrics" id="m2"></div></article>
+  </section>
+
+  <section class="bottom">
+    <div class="note"><h2>怎么看图</h2><p>每幅图是探测器正面看到的一级衍射分布。横轴是色散方向角，纵轴是谱线弯曲的方向。平行模型给出直谱带；圆环和螺线模型会因光斑内刻线方向变化而弯曲、展宽。</p><div class="legend"><span><i class="dot" style="background:#8b5cf6"></i>400–450 nm</span><span><i class="dot" style="background:#21b8d5"></i>450–500 nm</span><span><i class="dot" style="background:#38c878"></i>500–570 nm</span><span><i class="dot" style="background:#f4d34e"></i>570–600 nm</span><span><i class="dot" style="background:#ff4e45"></i>600–700 nm</span></div></div>
+    <div class="note"><h2>模型边界</h2><p>图样由局部光栅方程逐点追迹，并叠加有限光斑的衍射展宽、光束发散，以及按 100 mm 准直镜估算的狭缝角宽。它适合比较几何造成的谱线位置、弯曲和展宽趋势；目前没有纳入真实坑槽剖面、偏振、材料反射率、记录层吸收、翘曲和相干干涉，因此不预测绝对亮度，也不等同于某张实物光盘的精确仿真。</p></div>
+  </section>
+  <div class="status" id="status" role="status"></div>
+</main>
+<script>
+(() => {
+  'use strict';
+  const W = 440, H = 300, SPATIAL_SAMPLES = 1800;
+  const el = id => document.getElementById(id);
+  const controls = ['pitch','angle','spot','radius','slit','divergence','source','order'];
+  let scheduled = false;
+
+  function makeDiskSamples(count) {
+    const samples=[], golden=Math.PI*(3-Math.sqrt(5));
+    for(let i=0;i<count;i++) {
+      const rho=0.5*Math.sqrt((i+0.5)/count), theta=i*golden;
+      samples.push([rho*Math.cos(theta),rho*Math.sin(theta)]);
+    }
+    return samples;
+  }
+  const diskSamples=makeDiskSamples(SPATIAL_SAMPLES);
+
+  function wavelengths() {
+    const source = el('source').value;
+    if (source === 'mono') return [{nm:589.0, weight:1}];
+    if (source === 'sodium') return [{nm:589.0, weight:0.52},{nm:589.6, weight:0.48}];
+    const result = [];
+    // Equal-energy white light isolates the geometrical effect. It is not a lamp spectrum.
+    for (let nm=405; nm<=695; nm+=2) result.push({nm, weight:1});
+    return result;
+  }
+
+  function spectralRGB(nm) {
+    let r=0,g=0,b=0;
+    if (nm<440) { r=(440-nm)/60; b=1; }
+    else if (nm<490) { g=(nm-440)/50; b=1; }
+    else if (nm<510) { g=1; b=(510-nm)/20; }
+    else if (nm<580) { r=(nm-510)/70; g=1; }
+    else if (nm<645) { r=1; g=(645-nm)/65; }
+    else { r=1; }
+    const edge = nm<420 ? 0.35+0.65*(nm-400)/20 : nm>680 ? 0.35+0.65*(700-nm)/20 : 1;
+    r*=edge; g*=edge; b*=edge;
+    const peak=Math.max(r,g,b,1e-9);
+    return [r/peak,g/peak,b/peak];
+  }
+
+  function cssSpectralColor(nm) {
+    const [r,g,b]=spectralRGB(nm);
+    return `rgb(${Math.round(255*r)},${Math.round(255*g)},${Math.round(255*b)})`;
+  }
+
+  function readParams() {
+    return {
+      d: Number(el('pitch').value)*1e-6,
+      alpha: Number(el('angle').value)*Math.PI/180,
+      spot: Number(el('spot').value)*1e-3,
+      radius: Number(el('radius').value)*1e-3,
+      slit: Number(el('slit').value)*1e-6,
+      divergence: Number(el('divergence').value)*Math.PI/180,
+      order: Number(el('order').value),
+      wavelengths: wavelengths()
+    };
+  }
+
+  function grooveNormal(model, x, y, p) {
+    if (model === 0) return [1,0];
+    const r = Math.max(1e-9,Math.hypot(x,y));
+    const erx=x/r, ery=y/r;
+    if (model === 1) return [erx,ery];
+    // For psi = r/d - theta/(2 pi), d*grad(psi) = e_r - d/(2 pi r) e_theta.
+    const q=p.d/(2*Math.PI*r);
+    const nx=erx+q*ery, ny=ery-q*erx;
+    const n=Math.hypot(nx,ny);
+    return [nx/n,ny/n];
+  }
+
+  function outputDirection(model, x, y, nm, p) {
+    const [nx,ny]=grooveNormal(model,x,y,p);
+    const lambda=nm*1e-9;
+    const ui=Math.sin(p.alpha), vi=0;
+    const u=ui-p.order*lambda/p.d*nx;
+    const v=vi-p.order*lambda/p.d*ny;
+    const s2=u*u+v*v;
+    if (s2>=1) return null;
+    return [Math.asin(u),Math.asin(v)];
+  }
+
+  function rayDiagramWavelengths(p) {
+    const source=el('source').value;
+    if(source==='mono') return [589];
+    if(source==='sodium') return [589.0,589.6];
+    return [410,450,500,550,590,630,680];
+  }
+
+  function drawRayDiagram(p) {
+    const canvas=el('side'), ctx=canvas.getContext('2d');
+    const w=canvas.width, h=canvas.height;
+    ctx.clearRect(0,0,w,h);
+    const bg=ctx.createLinearGradient(0,0,0,h);
+    bg.addColorStop(0,'#0a1019'); bg.addColorStop(1,'#101925');
+    ctx.fillStyle=bg; ctx.fillRect(0,0,w,h);
+
+    const P={x:w*0.56,y:h*0.72}, Lin=Math.min(w*0.42,h*1.55), Lout=Math.min(w*0.31,h*1.05);
+    const source={x:P.x-Lin*Math.sin(p.alpha),y:P.y-Lin*Math.cos(p.alpha)};
+    const point=(a,b,t)=>({x:a.x+(b.x-a.x)*t,y:a.y+(b.y-a.y)*t});
+    const slit=point(source,P,0.30), lens=point(source,P,0.52);
+    const ux=(P.x-source.x)/Lin, uy=(P.y-source.y)/Lin;
+    const px=-uy, py=ux;
+
+    // Disc and illuminated footprint.
+    ctx.strokeStyle='#7890ae'; ctx.lineWidth=5; ctx.beginPath(); ctx.moveTo(w*0.40,P.y); ctx.lineTo(w*0.73,P.y); ctx.stroke();
+    const spotPx=Math.max(10,Math.min(95,p.spot/0.016*95));
+    const glow=ctx.createLinearGradient(P.x-spotPx/2,0,P.x+spotPx/2,0);
+    glow.addColorStop(0,'rgba(126,200,255,0)'); glow.addColorStop(.5,'rgba(126,200,255,.95)'); glow.addColorStop(1,'rgba(126,200,255,0)');
+    ctx.strokeStyle=glow; ctx.lineWidth=9; ctx.beginPath(); ctx.moveTo(P.x-spotPx/2,P.y-1); ctx.lineTo(P.x+spotPx/2,P.y-1); ctx.stroke();
+    ctx.fillStyle='#b9c5d6'; ctx.font='15px system-ui'; ctx.textAlign='center'; ctx.fillText('反射光盘（侧面）',P.x,P.y+28);
+
+    // Normal.
+    ctx.save(); ctx.setLineDash([8,7]); ctx.strokeStyle='rgba(205,218,237,.65)'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(P.x,P.y+8); ctx.lineTo(P.x,P.y-Lout-36); ctx.stroke(); ctx.restore();
+    ctx.fillStyle='#aebbd0'; ctx.fillText('法线',P.x+28,P.y-Lout-23);
+
+    // Source.
+    const halo=ctx.createRadialGradient(source.x,source.y,2,source.x,source.y,28);
+    halo.addColorStop(0,'#fff'); halo.addColorStop(.25,'#ffe47a'); halo.addColorStop(1,'rgba(255,212,72,0)');
+    ctx.fillStyle=halo; ctx.beginPath(); ctx.arc(source.x,source.y,28,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='#ffe87c'; ctx.beginPath(); ctx.arc(source.x,source.y,8,0,Math.PI*2); ctx.fill();
+    ctx.textAlign='left'; ctx.fillStyle='#e9eef7'; ctx.fillText('光源',source.x+18,source.y-12);
+
+    // Incident light, slit and collimator.
+    ctx.strokeStyle='rgba(255,247,210,.92)'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(source.x+ux*10,source.y+uy*10); ctx.lineTo(P.x,P.y); ctx.stroke();
+    for(const offset of [-10,10]) {
+      ctx.strokeStyle='rgba(255,247,210,.25)'; ctx.lineWidth=1.5;
+      ctx.beginPath(); ctx.moveTo(lens.x+px*offset,lens.y+py*offset); ctx.lineTo(P.x+px*offset*0.25,P.y+py*offset*0.25); ctx.stroke();
+    }
+    ctx.strokeStyle='#d7e2f2'; ctx.lineWidth=4;
+    ctx.beginPath(); ctx.moveTo(slit.x+px*15,slit.y+py*15); ctx.lineTo(slit.x+px*4,slit.y+py*4); ctx.moveTo(slit.x-px*4,slit.y-py*4); ctx.lineTo(slit.x-px*15,slit.y-py*15); ctx.stroke();
+    ctx.strokeStyle='#7ec8ff'; ctx.lineWidth=3;
+    ctx.beginPath(); ctx.moveTo(lens.x+px*24,lens.y+py*24); ctx.quadraticCurveTo(lens.x+ux*8,lens.y+uy*8,lens.x-px*24,lens.y-py*24); ctx.stroke();
+    ctx.fillStyle='#cbd6e6'; ctx.font='14px system-ui'; ctx.textAlign='center';
+    ctx.fillText('狭缝',slit.x+px*30,slit.y+py*30); ctx.fillText('准直镜',lens.x+px*36,lens.y+py*36);
+
+    // Angle of incidence.
+    ctx.strokeStyle='#8ba0bc'; ctx.lineWidth=1.5; ctx.beginPath(); ctx.arc(P.x,P.y,46,-Math.PI/2-p.alpha,-Math.PI/2); ctx.stroke();
+    const amid=-Math.PI/2-p.alpha/2;
+    ctx.fillStyle='#b9c5d6'; ctx.fillText(`α = ${(p.alpha*180/Math.PI).toFixed(0)}°`,P.x+62*Math.cos(amid),P.y+62*Math.sin(amid));
+
+    // Specular zero order.
+    const spec={x:P.x+Lout*Math.sin(p.alpha),y:P.y-Lout*Math.cos(p.alpha)};
+    ctx.save(); ctx.setLineDash([7,7]); ctx.strokeStyle='rgba(205,218,237,.42)'; ctx.lineWidth=2;
+    ctx.beginPath(); ctx.moveTo(P.x,P.y); ctx.lineTo(spec.x,spec.y); ctx.stroke(); ctx.restore();
+    ctx.fillStyle='#9eabc0'; ctx.textAlign='left'; ctx.fillText('0 级（镜面反射）',spec.x+8,spec.y);
+
+    // Diffracted fan and an angular detector arc.
+    const samples=rayDiagramWavelengths(p), rays=[];
+    for(const nm of samples) {
+      const dir=outputDirection(0,p.radius,0,nm,p);
+      if(!dir) continue;
+      const beta=dir[0], end={x:P.x+Lout*Math.sin(beta),y:P.y-Lout*Math.cos(beta)};
+      rays.push({nm,beta,end});
+      ctx.shadowBlur=10; ctx.shadowColor=cssSpectralColor(nm); ctx.strokeStyle=cssSpectralColor(nm); ctx.lineWidth=3;
+      ctx.beginPath(); ctx.moveTo(P.x,P.y); ctx.lineTo(end.x,end.y); ctx.stroke(); ctx.shadowBlur=0;
+      ctx.fillStyle=cssSpectralColor(nm); ctx.beginPath(); ctx.arc(end.x,end.y,4,0,Math.PI*2); ctx.fill();
+    }
+    if(rays.length) {
+      const angles=rays.map(r=>-Math.PI/2+r.beta);
+      ctx.strokeStyle='rgba(126,200,255,.45)'; ctx.lineWidth=5;
+      ctx.beginPath(); ctx.arc(P.x,P.y,Lout,Math.min(...angles)-0.05,Math.max(...angles)+0.05); ctx.stroke();
+      ctx.fillStyle='#dbe7f7'; ctx.textAlign='center';
+      const center=rays[Math.floor(rays.length/2)].end;
+      ctx.fillText('探测屏 / 相机',center.x,Math.max(19,center.y-20));
+      for(const r of rays) {
+        if(samples.length>2 && ![410,500,590,680].includes(r.nm)) continue;
+        ctx.fillStyle=cssSpectralColor(r.nm); ctx.font='13px system-ui';
+        ctx.fillText(`${r.nm.toFixed(0)} nm`,r.end.x,r.end.y-9);
+      }
+    } else {
+      ctx.fillStyle='#ffb36b'; ctx.textAlign='center'; ctx.fillText('当前条件下此级次不能传播',P.x,P.y-95);
+    }
+    const betaText=rays.length ? `${(Math.min(...rays.map(r=>r.beta))*180/Math.PI).toFixed(1)}° ～ ${(Math.max(...rays.map(r=>r.beta))*180/Math.PI).toFixed(1)}°` : '无';
+    el('rayReadout').innerHTML=`<span>入射角 <b>${(p.alpha*180/Math.PI).toFixed(0)}°</b></span><span>一级反射角范围 <b>${betaText}</b></span><span>轨距 <b>${(p.d*1e6).toFixed(2)} μm</b></span><span>照明光斑 <b>${(p.spot*1e3).toFixed(1)} mm</b></span>`;
+  }
+
+  function bilinearSplat(buffers, x, y, value, rgb) {
+    const x0=Math.floor(x), y0=Math.floor(y), fx=x-x0, fy=y-y0;
+    const weights=[[0,0,(1-fx)*(1-fy)],[1,0,fx*(1-fy)],[0,1,(1-fx)*fy],[1,1,fx*fy]];
+    for(const [ox,oy,wgt] of weights) {
+      const xx=x0+ox, yy=y0+oy;
+      if(xx<0||xx>=W||yy<0||yy>=H||wgt===0) continue;
+      const i=yy*W+xx, amount=value*wgt;
+      buffers.intensity[i]+=amount;
+      buffers.red[i]+=amount*rgb[0];
+      buffers.green[i]+=amount*rgb[1];
+      buffers.blue[i]+=amount*rgb[2];
+    }
+  }
+
+  function boxBlur(src, radius, horizontal) {
+    if(radius<1) return src;
+    const dst=new Float32Array(src.length);
+    if(horizontal) {
+      const prefix=new Float64Array(W+1);
+      for(let y=0;y<H;y++) {
+        const row=y*W; prefix[0]=0;
+        for(let x=0;x<W;x++) prefix[x+1]=prefix[x]+src[row+x];
+        for(let x=0;x<W;x++) {
+          const left=Math.max(0,x-radius), right=Math.min(W,x+radius+1);
+          dst[row+x]=(prefix[right]-prefix[left])/(right-left);
+        }
+      }
+    } else {
+      const prefix=new Float64Array(H+1);
+      for(let x=0;x<W;x++) {
+        prefix[0]=0;
+        for(let y=0;y<H;y++) prefix[y+1]=prefix[y]+src[y*W+x];
+        for(let y=0;y<H;y++) {
+          const top=Math.max(0,y-radius), bottom=Math.min(H,y+radius+1);
+          dst[y*W+x]=(prefix[bottom]-prefix[top])/(bottom-top);
+        }
+      }
+    }
+    return dst;
+  }
+
+  function smoothField(src, sigmaX, sigmaY) {
+    let result=src;
+    const rx=Math.max(0,Math.min(48,Math.round(Math.sqrt(sigmaX*sigmaX+0.25)-0.5)));
+    const ry=Math.max(0,Math.min(48,Math.round(Math.sqrt(sigmaY*sigmaY+0.25)-0.5)));
+    for(let pass=0;pass<3;pass++) result=boxBlur(result,rx,true);
+    for(let pass=0;pass<3;pass++) result=boxBlur(result,ry,false);
+    return result;
+  }
+
+  function calculate(p, model, xmin, xmax, ymin, ymax) {
+    const buffers={
+      intensity:new Float32Array(W*H), red:new Float32Array(W*H),
+      green:new Float32Array(W*H), blue:new Float32Array(W*H)
+    };
+    const plot={left:42,right:W-8,top:10,bottom:H-28};
+    const pxPerRadX=(plot.right-plot.left)/(xmax-xmin);
+    const pxPerRadY=(plot.bottom-plot.top)/(ymax-ymin);
+    let acceptedCount=0;
+    for(const wl of p.wavelengths) {
+      const displayRGB=spectralRGB(wl.nm);
+      // Mix wavelengths in approximate linear-light RGB, then apply display gamma once.
+      const linearRGB=displayRGB.map(channel=>Math.pow(channel,2.2));
+      const value=wl.weight/SPATIAL_SAMPLES;
+      for(const [sx,sy] of diskSamples) {
+        const dir=outputDirection(model,p.radius+sx*p.spot,sy*p.spot,wl.nm,p);
+        if(!dir) continue;
+        const px=plot.left+(dir[0]-xmin)*pxPerRadX;
+        const py=plot.bottom-(dir[1]-ymin)*pxPerRadY;
+        bilinearSplat(buffers,px,py,value,linearRGB);
+        acceptedCount++;
+      }
+    }
+    if(!acceptedCount) return {...buffers,acceptedCount};
+
+    // Instrument blur: slit image, beam divergence and finite illuminated aperture.
+    const slitSigma=p.slit/(Math.sqrt(12)*0.1);
+    const apertureSigma=0.44*550e-9/p.spot;
+    const sigmaX=Math.sqrt(slitSigma**2+p.divergence**2+apertureSigma**2)*pxPerRadX;
+    const sigmaY=Math.sqrt(p.divergence**2+apertureSigma**2)*pxPerRadY;
+    buffers.intensity=smoothField(buffers.intensity,sigmaX,sigmaY);
+    buffers.red=smoothField(buffers.red,sigmaX,sigmaY);
+    buffers.green=smoothField(buffers.green,sigmaX,sigmaY);
+    buffers.blue=smoothField(buffers.blue,sigmaX,sigmaY);
+    return {...buffers,acceptedCount};
+  }
+
+  function drawAxes(ctx, xmin,xmax,ymin,ymax) {
+    ctx.strokeStyle='rgba(190,205,225,.18)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.moveTo(42,10); ctx.lineTo(42,H-28); ctx.lineTo(W-8,H-28); ctx.stroke();
+    ctx.fillStyle='#98a6ba'; ctx.font='11px system-ui'; ctx.textAlign='center';
+    for(let i=0;i<=4;i++) {
+      const x=42+(W-52)*i/4, val=xmin+(xmax-xmin)*i/4;
+      ctx.fillText((val*180/Math.PI).toFixed(1)+'°',x,H-10);
+      const y=10+(H-38)*i/4, vy=ymax-(ymax-ymin)*i/4;
+      ctx.textAlign='right'; ctx.fillText((vy*180/Math.PI).toFixed(1)+'°',37,y+4); ctx.textAlign='center';
+      ctx.strokeStyle='rgba(190,205,225,.08)'; ctx.beginPath(); ctx.moveTo(42,y); ctx.lineTo(W-8,y); ctx.stroke();
+    }
+    ctx.fillStyle='#aebbd0'; ctx.fillText('色散方向角 βₓ',W/2,H-1);
+    ctx.save(); ctx.translate(12,H/2); ctx.rotate(-Math.PI/2); ctx.fillText('垂直方向角 βᵧ',0,0); ctx.restore();
+  }
+
+  function renderPanel(model, result, bounds) {
+    const canvas=el('c'+model), ctx=canvas.getContext('2d');
+    ctx.clearRect(0,0,W,H); ctx.fillStyle='#080c12'; ctx.fillRect(0,0,W,H);
+    const img=ctx.createImageData(W,H);
+    let maxLuminance=0;
+    for(let i=0;i<W*H;i++) {
+      const luminance=0.2126*result.red[i]+0.7152*result.green[i]+0.0722*result.blue[i];
+      maxLuminance=Math.max(maxLuminance,luminance);
+    }
+    const exposure=maxLuminance>0 ? 3.2/maxLuminance : 0;
+    for(let i=0;i<W*H;i++) {
+      const k=i*4;
+      const rr=Math.pow(1-Math.exp(-result.red[i]*exposure),1/2.2);
+      const gg=Math.pow(1-Math.exp(-result.green[i]*exposure),1/2.2);
+      const bb=Math.pow(1-Math.exp(-result.blue[i]*exposure),1/2.2);
+      img.data[k]=7+Math.round(248*rr);
+      img.data[k+1]=10+Math.round(245*gg);
+      img.data[k+2]=16+Math.round(239*bb);
+      img.data[k+3]=255;
+    }
+    ctx.putImageData(img,0,0);
+    drawAxes(ctx,...bounds);
+    return result;
+  }
+
+  function fwhmProfile(result, bounds) {
+    const mid=Math.round(H/2), row=[];
+    for(let x=44;x<W-8;x++) row.push(result.intensity[mid*W+x]);
+    const max=Math.max(...row); if(!max) return null;
+    let left=-1,right=-1;
+    const peak=row.indexOf(max), half=max/2;
+    for(let i=peak;i>=0;i--) if(row[i]<=half) {left=i;break;}
+    for(let i=peak;i<row.length;i++) if(row[i]<=half) {right=i;break;}
+    if(left<0||right<0) return null;
+    const rad=(right-left)*((bounds[1]-bounds[0])/(W-52));
+    return rad*180/Math.PI;
+  }
+
+  function metricHTML(label,value) { return `<div class="metric">${label}<b>${value}</b></div>`; }
+
+  function update() {
+    scheduled=false;
+    const p=readParams();
+    el('angleV').textContent=el('angle').value+'°';
+    el('spotV').textContent=el('spot').value+' mm';
+    el('radiusV').textContent=el('radius').value+' mm';
+    el('slitV').textContent=el('slit').value+' μm';
+    el('divV').textContent=el('divergence').value+'°';
+    drawRayDiagram(p);
+
+    const all=[];
+    const footprint=[[0,0]];
+    for(let i=0;i<96;i++) {
+      const theta=2*Math.PI*i/96;
+      footprint.push([0.5*p.spot*Math.cos(theta),0.5*p.spot*Math.sin(theta)]);
+    }
+    const boundWavelengths=[p.wavelengths[0],p.wavelengths[p.wavelengths.length-1]];
+    for(let model=0;model<3;model++) {
+      for(const [dx,dy] of footprint) {
+        for(const wl of boundWavelengths) {
+          const dir=outputDirection(model,p.radius+dx,dy,wl.nm,p);
+          if(dir) all.push(dir);
+        }
+      }
+    }
+    if(!all.length) {
+      for(let model=0;model<3;model++) {
+        const ctx=el('c'+model).getContext('2d'); ctx.clearRect(0,0,W,H); ctx.fillStyle='#080c12'; ctx.fillRect(0,0,W,H);
+        ctx.fillStyle='#ffb36b'; ctx.font='14px system-ui'; ctx.textAlign='center'; ctx.fillText('当前条件下，所选衍射级次不能传播',W/2,H/2);
+        el('m'+model).innerHTML=metricHTML('有效光线','无')+metricHTML('当前结果','无可传播级次')+metricHTML('线宽','—')+metricHTML('提示','调整入射角 / 级次');
+      }
+      el('status').textContent='几何光栅方程没有给出可传播的出射方向。'; return;
+    }
+    let xmin=Math.min(...all.map(a=>a[0])), xmax=Math.max(...all.map(a=>a[0]));
+    let ymin=Math.min(...all.map(a=>a[1])), ymax=Math.max(...all.map(a=>a[1]));
+    const slitSigma=p.slit/(Math.sqrt(12)*0.1);
+    const apertureSigma=0.44*(Math.max(...p.wavelengths.map(w=>w.nm))*1e-9)/p.spot;
+    const blurX=Math.sqrt(slitSigma**2+p.divergence**2+apertureSigma**2);
+    const blurY=Math.sqrt(p.divergence**2+apertureSigma**2);
+    const spanX=Math.max(xmax-xmin,8*blurX,0.00012), spanY=Math.max(ymax-ymin,8*blurY,0.00012);
+    const padX=0.12*spanX, padY=0.12*spanY;
+    if(xmax-xmin<spanX) { const c=(xmax+xmin)/2; xmin=c-spanX/2; xmax=c+spanX/2; }
+    if(ymax-ymin<spanY) { const c=(ymax+ymin)/2; ymin=c-spanY/2; ymax=c+spanY/2; }
+    xmin-=padX; xmax+=padX; ymin-=padY; ymax+=padY;
+    const bounds=[xmin,xmax,ymin,ymax];
+    const results=[];
+    for(let model=0;model<3;model++) {
+      const result=calculate(p,model,xmin,xmax,ymin,ymax);
+      renderPanel(model,result,bounds); results.push(result);
+      const valid=result.acceptedCount;
+      const width=fwhmProfile(result,bounds);
+      const geometry=model===0?'无曲率基准':model===1?'环形弯曲':'螺线局部法线';
+      const widthLabel=el('source').value==='white' ? '光源模式' : '中心截面 FWHM';
+      const widthValue=el('source').value==='white' ? '连续白光积分' : (width===null?'—':width.toFixed(3)+'°');
+      el('m'+model).innerHTML=metricHTML('积分光线数',valid.toLocaleString())+metricHTML('几何特征',geometry)+metricHTML(widthLabel,widthValue)+metricHTML('模型级次',`${p.order>0?'+':''}${p.order} 级`);
+    }
+    const spiralRatio=p.d/(2*Math.PI*p.radius);
+    el('status').textContent=`螺线相对同心圆的局部切向法线修正约 d/(2πR) = ${spiralRatio.toExponential(2)}；颜色为连续波长积分后的视觉模拟，绝对亮度尚未标定。`;
+  }
+
+  function schedule() { if(scheduled) return; scheduled=true; requestAnimationFrame(update); }
+  for(const id of controls) el(id).addEventListener('input',schedule);
+  update();
+})();
+</script>
+</body>
+</html>
