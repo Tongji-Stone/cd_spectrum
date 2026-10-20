@@ -6,3 +6,24 @@
 *.synctex.gz
 *.fdb_latexmk
 *.fls
+
+# Local scratch / backups
+_local/
+
+# COMSOL build & run artefacts (regenerate from *.java)
+模拟/comsol/**/*.class
+模拟/comsol/**/*.mph
+模拟/comsol/**/*.mph.status
+模拟/comsol/**/*.mph.lock
+模拟/comsol/**/*.recovery
+模拟/comsol/**/*log.txt
+模拟/comsol/**/*.status
+模拟/comsol/ring3d_land.txt
+模拟/comsol/landing.txt
+模拟/comsol/ring_rays.txt
+模拟/comsol/Rorders.txt
+模拟/comsol/Rtab.txt
+模拟/comsol/grat_props.txt
+模拟/comsol/probe_vars.txt
+模拟/comsol/orders_*.txt
+模拟/comsol/_ref/
