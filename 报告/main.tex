@@ -1,4 +1,4 @@
-% 编译方式：在报告目录运行 xelatex main.tex（目录更新需编译两次）
+﻿% 编译方式：在报告目录运行 xelatex main.tex（目录更新需编译两次）
 \documentclass[UTF8,a4paper,12pt]{ctexart}
 \usepackage[margin=2.5cm]{geometry}
 \usepackage{amsmath,amssymb}
@@ -33,7 +33,7 @@ Data tracks on optical media (e.g. CDs / Blu-ray discs) behave as high-quality r
 
 光学存储介质（如 CD 或蓝光光盘）上的数据轨道可以作为反射式衍射光栅。当受到光照时，光盘能将光色散成其光谱成分。本课题要求利用数字光盘构建光谱仪，并优化其设计，以提高分辨本领、减小光学像差。
 
-本课题以光盘作为色散元件，研究光谱仪的光路结构及光谱分辨能力。通过理论分析、预实验和后续测量，考察轨距、照明区域、狭缝宽度及成像条件对光谱的影响，探索兼顾分辨能力和器材成本的设计。
+本课题以光盘作为色散元件，研究光谱仪的光路结构。目前已进行了光盘色散现象的预实验和光学原理分析，并搭建了可用手机记录衍射光谱的装置；后续将研究轨距、照明区域、狭缝宽度及成像条件对分辨率的影响。
 
 
 \section{课题研究背景}
@@ -44,24 +44,24 @@ Data tracks on optical media (e.g. CDs / Blu-ray discs) behave as high-quality r
 
 数字光盘的数据轨道具有规则的周期结构，可作为反射式衍射光栅使用,有助于推动光谱仪的普及化和低成本化。
 \subsection{前人研究进展}
-光谱仪通过获取光强随波长的分布，提供物质成分和结构的信息。Yang 等综述了光谱仪的小型化发展，介绍了色散型、干涉型及计算型等技术路线，以及光谱范围、分辨率和器件尺寸之间的设计问题\cite{yang2021}。
-图\ref{fig:yang-literature}展示了综述中的色散型与窄带滤波型光谱仪方案：前者通过色散元件将不同波长导向不同位置，后者通过滤波器选择波段。
 
-\begin{figure}[htbp]
+\subsubsection{光谱仪的主要技术方案}
+光谱仪可以根据工作波段和光谱获取方式进行分类。从分光技术原理出发，我们可以将光谱仪归纳为衍射型、干涉型、散射型、荧光型、滤光片型和棱镜色散型六类\cite{nie2019classification}。各类方案的基本结构如图\ref{fig:spectrometer-classification}所示。
+
+\begin{figure}[p]
   \centering
-  \begin{minipage}[t]{0.48\textwidth}\centering
-    \includegraphics[width=\linewidth]{fig/yang2021_dispersion.png}\\
-    （a）色散型光谱仪
-  \end{minipage}\hfill
-  \begin{minipage}[t]{0.48\textwidth}\centering
-    \includegraphics[width=\linewidth]{fig/yang2021_filters.png}\\
-    （b）窄带滤波型光谱仪
-  \end{minipage}
-  \caption{小型光谱仪的两种方案，分别引自 Yang 等\cite{yang2021}图 1 的 A、B 部分。}
-  \label{fig:yang-literature}
+  \includegraphics[width=0.96\textwidth,height=0.82\textheight,keepaspectratio]{fig/nie_spectrometer_map.pdf}
+  \caption{光谱仪技术方案导图}
+  \label{fig:spectrometer-classification}
 \end{figure}
 
-在低成本光谱仪方面，da Silva 等报道了以常见器件实现光谱测量的方案\cite{dasilva2018}。Likith 等使用 DVD、摄像头和箱体搭建光谱仪，将经过样品的光谱记录并用于不同溶液的观察\cite{likith2021}。其设计将光盘的周期结构用作色散元件，并利用摄像头采集光谱图像，为本课题使用数字光盘提供了可参考的实例。其两种装置如图\ref{fig:likith-spectrometer}所示。
+衍射型利用光栅将不同波长的光分开；干涉型通过干涉调制获得信号，并可由傅里叶变换重建光谱；滤光片型通过选择性透过不同波段实现光谱测量；棱镜色散型利用折射率随波长变化所产生的色散分光。散射型方案利用光纤中的受激布里渊散射等效应；荧光型则通过激发样品并检测其荧光进行分析. 在实际仪器中也可以组合使用\cite{nie2019classification}。
+
+\subsubsection{光盘光谱仪及相关研究}
+本课题使用光盘数据轨道产生的衍射来分光，属于图中衍射型方案。下面结合相关研究介绍低成本光盘光谱仪以及高分辨率光谱仪的设计。
+
+
+首先, 在低成本光谱仪方面，da Silva 等报道了以常见器件实现光谱测量的方案\cite{dasilva2018}。Likith 等使用 DVD、摄像头和箱体搭建光谱仪，将经过样品的光谱记录并用于不同溶液的观察\cite{likith2021}。其设计将光盘的周期结构用作色散元件，并利用摄像头采集光谱图像，为本课题使用数字光盘提供了可参考的实例。其两种装置如图\ref{fig:likith-spectrometer}所示。
 
 \begin{figure}[htbp]
   \centering
@@ -112,14 +112,33 @@ Sun 等对 DVD-R 金属层的表面形貌进行了测量。作者使用原子力
 \end{figure}
 
 
-在集成光谱仪方面，Hong 和 Sengupta 研究了面向可见光和近红外波段的 CMOS 集成光谱仪。作者将导光、色散和光电探测集成在芯片上，并在 $500$--$830\,\mathrm{nm}$ 范围内开展测量；所报道芯片的有源区域尺寸为 $0.64\,\mathrm{mm}\times0.56\,\mathrm{mm}$\cite{hong2017}。这一工作展示了通过集成化缩小光谱测量系统尺寸的思路。不同方案的光学结构和探测方式各有特点，具体设计应结合目标波段、分辨率和器件条件选择。
+对于更广泛的光谱仪设计来说, Yang 等综述了光谱仪的小型化发展，介绍了色散型、干涉型及计算型等技术路线，以及光谱范围、分辨率和器件尺寸之间的设计问题\cite{yang2021}。
+图\ref{fig:yang-literature}展示了综述中的色散型与窄带滤波型光谱仪方案：前者通过色散元件将不同波长导向不同位置，后者通过滤波器选择波段。
+
+\begin{figure}[htbp]
+  \centering
+  \begin{minipage}[t]{0.48\textwidth}\centering
+    \includegraphics[width=\linewidth]{fig/yang2021_dispersion.png}\\
+    （a）色散型光谱仪
+  \end{minipage}\hfill
+  \begin{minipage}[t]{0.48\textwidth}\centering
+    \includegraphics[width=\linewidth]{fig/yang2021_filters.png}\\
+    （b）窄带滤波型光谱仪
+  \end{minipage}
+  \caption{小型光谱仪的两种方案}
+  \label{fig:yang-literature}
+\end{figure}
+
+
 
 \subsubsection{高分辨率光谱仪：F--P 干涉仪与光栅联用}
-当需要区分波长非常接近的谱线时，可以将具有高光谱选择性的干涉器件与色散元件联用。以法布里--珀罗（Fabry--Pérot，简称 F--P）干涉仪为例，光在两反射面之间多次反射，多个出射光束相干叠加，使透射光谱出现一系列较窄的周期性透射峰。改变两反射面之间的间距，可以移动透射峰的位置，逐步扫描待测光谱。
+我们在《光学》里有学到，部分激光产生的条件是光在谐振腔内多次反射后相干叠加（类似驻波）。那么我们能不能逆向的来利用这个谐振腔来筛选出想要的波长？类似地，干涉仪也利用光的相干叠加来实现高光谱选择性。这就是 Fabry--Pérot（F--P）干涉仪的基本原理。
+
+当需要区分波长非常接近的谱线时，可以将具有高光谱选择性的干涉器件与色散元件联用。对F--P干涉仪，光在两反射面之间多次反射，多个出射光束相干叠加，使透射光谱出现一系列较窄的周期性透射峰。改变两反射面之间的间距，可以移动透射峰的位置，逐步扫描待测光谱。
 
 F--P 干涉仪的相邻透射峰之间具有有限的自由光谱范围。宽波段光同时入射时，不同干涉级次可能产生多个透射峰，仅靠单次透射信号难以确定各峰对应的波长。将 F--P 干涉仪与光栅光谱仪级联后，光栅可以在空间上区分不同波长区域的透射信号；通过扫描腔长并记录各位置的光强，再进行光谱重构，可以兼顾较宽的测量范围与较高的光谱分辨能力。该方法要求合理匹配 F--P 干涉仪的自由光谱范围和光栅光谱仪的分辨能力，并考虑扫描时间与标定等因素\cite{zhong2020micro}。
 
-钟卉提出了可调谐微型 F--P 干涉仪与微型曲面光栅光谱仪级联的设计，并以拉曼光谱仪为例进行光学设计和光谱重构仿真。论文的仿真结果给出拉曼位移范围为 $150$--$3200\,\mathrm{cm}^{-1}$，重构光谱的分辨率约为 $6.4\,\mathrm{cm}^{-1}$\cite{zhong2020micro}。这一方案展示了干涉滤波和光栅色散的互补作用，也为理解高分辨率与宽光谱范围之间的设计取舍提供了参考。
+钟卉提出了可调谐微型 F--P 干涉仪与微型曲面光栅光谱仪级联的设计，展示了干涉滤波和光栅色散的互补作用，说明联用确实可以兼顾高分辨率与宽光谱范围。
 
 \begin{figure}[htbp]
   \centering
@@ -284,7 +303,7 @@ F--P 干涉仪的相邻透射峰之间具有有限的自由光谱范围。宽波
 自由光谱范围描述的是避免相邻级次重叠所对应的波长间隔，它与分辨相近谱线的能力是两个不同的指标。实际仪器可通过限制入射波段或使用滤光片等方式抑制级次重叠。
 
 
-\subsection{光谱仪光路与分辨率模型}
+\subsection{后续光谱仪设计思路}
 考虑采用李特罗光路：狭缝位于准直透镜的前焦平面，光束经过透镜后照射光盘，选定波长附近的衍射光沿接近入射光的反方向返回，经同一透镜会聚到探测器所在的焦平面。设计波长 $\lambda_0$ 满足 $\alpha=\beta=\alpha_L$，由光栅方程得到
 \begin{equation}
   \alpha_L=\arcsin\!\left(\frac{m\lambda_0}{2d}\right).
@@ -297,7 +316,7 @@ F--P 干涉仪的相邻透射峰之间具有有限的自由光谱范围。宽波
     \sin\!\left(\beta_0+\arctan\frac{x}{f}\right)\right].
   \label{eq:pixel-wavelength}
 \end{equation}
-实际数据处理中，先从已知波长谱线确定其像素位置，再拟合位置与波长的对应关系。若使用像素坐标 $p$，可在选定波段内拟合多项式 $\lambda(p)=a_0+a_1p+a_2p^2$；参考谱线数量和分布应满足拟合参数与检验的需要。例如，在 $d=740\,\mathrm{nm}$、$m=1$、$f=200\,\mathrm{mm}$，并以 $589.3\,\mathrm{nm}$ 为李特罗中心波长时，$x=0.10\,\mathrm{mm}$ 对应的理论波长约为 $589.64\,\mathrm{nm}$。
+实际数据处理中，先从已知波长谱线确定其像素位置，再拟合位置与波长的对应关系。若使用像素坐标 $p$，可在选定波段内拟合多项式 $\lambda(p)=a_0+a_1p+a_2p^2$；参考谱线数量和分布应满足拟合参数与检验的需要。
 
 
 设狭缝宽度为 $w$、准直透镜焦距为 $f$。在近轴和小角度条件下，狭缝宽度引入的入射角范围约为 $w/f$。对光栅方程在固定出射方向附近微分，可估算狭缝宽度对应的波长展宽：
@@ -313,37 +332,7 @@ F--P 干涉仪的相邻透射峰之间具有有限的自由光谱范围。宽波
 \end{equation}
 这一关系可用来估算相机对谱线的采样尺度。若以两个像素间距作为比较尺度，其对应的波长间隔约为 $2\Delta\lambda_{\rm pix}$；选择相机时还需结合实际谱线宽度、信噪比和探测器的有效尺寸。
 
-\subsection{计算结果}
-以钠黄光附近 $\lambda_0=589.3\,\mathrm{nm}$、一级衍射为设计例，分别取 CD 轨距 $d=1600\,\mathrm{nm}$、DVD 轨距 $d=740\,\mathrm{nm}$，计算得到李特罗角约为 $10.6^\circ$ 和 $23.5^\circ$。图\ref{fig:littrow}给出了两种轨距下设计波长与李特罗角的关系。这里的轨距是计算用标称值，具体盘片应以测量结果为准。
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=0.72\textwidth]{fig/littrow.pdf}
-  \caption{CD 与 DVD 标称轨距下，一级李特罗角随波长的变化。}
-  \label{fig:littrow}
-\end{figure}
-
-以 DVD 为例，若准直透镜焦距为 $200\,\mathrm{mm}$、狭缝宽度为 $50\,\mu\mathrm{m}$，代入上述公式得到狭缝对应的波长展宽约为 $0.17\,\mathrm{nm}$。该值用于评估单一因素的影响；实际仪器的谱线宽度需要结合像差、光盘表面质量、探测器和实验装调确定。
-
-为比较狭缝宽度的影响，固定焦距为 $200\,\mathrm{mm}$、中心波长为 $589.3\,\mathrm{nm}$，将不同缝宽代入展宽公式，得到表\ref{tab:slit-estimate}。在这一几何模型下，缝宽减半，狭缝引入的波长展宽也减半。测量时可以从较宽狭缝开始寻找光谱，再逐步缩窄狭缝，比较谱线宽度和信号强度。
-
-\begin{table}[htbp]
-  \centering
-  \caption{不同狭缝宽度下的理论波长展宽估算（单位：nm）}
-  \label{tab:slit-estimate}
-  \begin{tabular}{ccc}
-    \toprule
-    狭缝宽度（$\mu\mathrm{m}$） & CD & DVD \\
-    \midrule
-    25  & 0.197 & 0.085 \\
-    50  & 0.393 & 0.170 \\
-    100 & 0.786 & 0.339 \\
-    \bottomrule
-  \end{tabular}
-\end{table}
-
-
-\subsection{光路优化思路}
+\subsection{后续光路优化思路}
 光谱仪的优化需要同时关注谱线宽度、光谱强度和谱线形状。结合前述光栅模型，可从表\ref{tab:optimization}中的几个方面调整光路；每次改变一个因素，记录谱线及相机设置，便于比较调整效果。
 
 \begin{table}[htbp]
@@ -364,27 +353,43 @@ F--P 干涉仪的相邻透射峰之间具有有限的自由光谱范围。宽波
 \end{table}
 
 \section{实验装置}
-\subsection{预实验装置}
-预实验使用光源、光盘和光屏观察色散现象。实验中将光盘放置在光路中，使照射到盘面的光发生衍射，并用光屏接收光斑；部分观察中还使用凸透镜或遮挡物改变光路。图\ref{fig:pre-setup}为 CD-R 预实验的装置照片。
+\subsection{光谱仪结构}
+我们搭建了以光盘为衍射光栅的光谱仪，装置由入射狭缝、消色差透镜、光盘及遮光结构组成，如图\ref{fig:apparatus-1122}所示。光源放置在狭缝一侧，透过狭缝的光经过透镜后照射到固定的光盘上；透镜用于准直入射光，光盘将不同波长的光沿不同方向衍射。装置一侧留有观察和拍摄空间，使用手机记录衍射光谱。通过调整光盘和手机的位置，可以观察所需方向的光谱。
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.72\textwidth,height=7cm,keepaspectratio]{fig/pre_setup.jpg}
-  \caption{CD-R 预实验装置及光屏。}
-  \label{fig:pre-setup}
+  \begin{minipage}[t]{0.30\textwidth}\centering
+    \includegraphics[width=\linewidth]{fig/setup_top_1122.jpg}\\
+    （a）装置俯视
+  \end{minipage}\hfill
+  \begin{minipage}[t]{0.30\textwidth}\centering
+    \includegraphics[width=\linewidth]{fig/setup_side_1122.jpg}\\
+    （b）装置侧视
+  \end{minipage}\hfill
+  \begin{minipage}[t]{0.30\textwidth}\centering
+    \includegraphics[width=\linewidth]{fig/setup_slit_1122.jpg}\\
+    （c）狭缝与光源
+  \end{minipage}
+  \caption{光盘光谱仪装置实拍。}
+  \label{fig:apparatus-1122}
 \end{figure}
 
-\subsection{光谱仪设计方案}
-光谱仪的拟建光路由光源、狭缝、准直透镜、光盘光栅和探测器组成。狭缝确定入射光束的空间范围；准直透镜将狭缝发出的光整形成近似平行光；光盘使不同波长沿不同方向衍射；探测器记录成像后的光谱。通过调整光盘角度和照明区域，可以选择观察的衍射级次和光谱范围。
+\subsection{实验光源}
+光源的光谱特性和亮度直接影响光谱的观察与测量。对于分辨率分析，需要使用具有分立谱线的光源，以便观察相邻谱线的分离情况，并分析谱线的宽度。实验室提供的钠灯可用于观察钠光谱，但使用条件有限，因此我们选用小氖泡作为实验光源。单个氖泡亮度有限，为获得更强的光信号，我们利用手头材料将多个氖泡并联，制作了氖泡光源，见图\ref{fig:neon-parallel-1122}。
 
 \begin{figure}[htbp]
   \centering
-  \includegraphics[width=0.93\textwidth]{fig/littrow_layout.pdf}
-  \caption{拟建李特罗光谱仪光路示意图。}
-  \label{fig:littrow-layout}
+  \begin{minipage}[t]{0.27\textwidth}\centering
+    \includegraphics[width=\linewidth]{fig/neon_parallel_1122.jpg}\\
+    （a）并联结构
+  \end{minipage}\hspace{1.5em}
+  \begin{minipage}[t]{0.27\textwidth}\centering
+    \includegraphics[width=\linewidth]{fig/neon_lit_1122.jpg}\\
+    （b）通电状态
+  \end{minipage}
+  \caption{自制并联氖泡光源。}
+  \label{fig:neon-parallel-1122}
 \end{figure}
-
-在李特罗方案中，准直与成像可以共用透镜。装调时需要合理安排狭缝与探测器的位置，并控制返回光束遮挡。该光路将作为后续搭建和测量的设计方案。
 
 \section{实验分析}
 \subsection{实验步骤与测量方法}
@@ -392,7 +397,7 @@ F--P 干涉仪的相邻透射峰之间具有有限的自由光谱范围。宽波
 首先将 CD-R 和 DVD-R 放入光路，用光源照射盘面，在光屏上观察彩色光带并拍照；随后遮挡部分盘面，观察光带的变化。使用含氩小氖泡作为光源时，分别借助 CD 和 DVD 观察其色散现象。此外，还进行了光盘浸泡与印刷层剥离、DVD 分层，以及实验室氦氖激光器与透射式 CD 的观察。
 
 \subsubsection{后续光谱测量方法}
-光谱仪搭建与测量拟按以下步骤进行：首先调节光源、狭缝与准直透镜，使光束照射光盘的局部区域；随后调整光盘及探测器位置，观察并记录选定级次的光谱。使用已知波长的谱线建立像素位置与波长的对应关系，再对感兴趣的谱线进行测量。
+后续光谱测量拟按以下步骤进行：首先调节光源、狭缝与准直透镜，使光束照射光盘的局部区域；随后调整光盘及探测器位置，观察并记录选定级次的光谱。使用已知波长的谱线建立像素位置与波长的对应关系，再对感兴趣的谱线进行测量。
 
 研究影响因素时，可固定光源、探测器设置及其他光路参数，分别改变狭缝宽度、光盘类型和照明区域，比较谱线的位置、宽度与形状。若使用钠双线，可观察两条谱线是否能够分开，并结合标定关系计算波长间隔。
 
@@ -435,19 +440,19 @@ F--P 干涉仪的相邻透射峰之间具有有限的自由光谱范围。宽波
 
 图像的像素距离需要结合几何关系或已知谱线进行波长标定；相机各颜色通道的响应也会影响曲线形状。后续测量可记录光源、光盘和拍摄条件，用已知谱线建立像素与波长的对应关系，再分析谱线宽度。
 
-目前已获得预实验照片与图像径向数据，后续将搭建可直接输出光谱的光谱仪，并进行波长标定和不同条件下的测量。
+目前已获得预实验照片、图像径向数据及光谱仪拍摄的光谱照片，后续将进行波长标定和不同条件下的测量。
 
 \section{研究结论}
 \subsection{理论分析结论}
 光盘上的周期轨道可以作为衍射光栅，使不同波长的光沿不同方向传播。光栅轨距、入射角和衍射级次共同决定衍射方向，照明区域的轨道曲率会影响光谱形状。减小狭缝宽度可以降低狭缝带来的谱线展宽，同时会减少进入光谱仪的光通量。
 
-对 DVD 一级李特罗光路进行估算：在中心波长为 $589.3\,\mathrm{nm}$、光栅轨距为 $740\,\mathrm{nm}$ 时，李特罗角约为 $23.5^\circ$；取焦距 $200\,\mathrm{mm}$、狭缝宽度 $50\,\mu\mathrm{m}$ 时，狭缝对应的波长展宽约为 $0.17\,\mathrm{nm}$。
+分辨率的测量和优化将在后续实验中开展。
 
 \subsection{实验结论}
 预实验中，CD-R 和 DVD-R 受光照后在光屏上形成彩色光带；遮挡部分盘面后，观察到局部弧形光带。对环状光斑照片的径向分析显示，不同半径处的 RGB 通道数值存在变化。
 
 \subsection{理论与实验对比}
-光栅色散理论预示不同波长沿不同方向传播，盘面轨道方向的变化会改变局部色散方向；预实验中观察到的彩色环状光带及遮挡后的局部弧带，与这一图像在定性上相符。目前尚未完成能够直接输出光谱的光谱仪。后续将搭建光谱仪，通过已知谱线进行波长标定，并测量不同狭缝宽度及照明区域下的谱线宽度，评价仪器的实际分辨能力。
+光栅色散理论预示不同波长沿不同方向传播，盘面轨道方向的变化会改变局部色散方向；预实验中观察到的彩色环状光带及遮挡后的局部弧带，与这一图像在定性上相符。目前已搭建光谱仪并拍摄到衍射光谱。后续将通过已知谱线进行波长标定，并测量不同狭缝宽度及照明区域下的谱线宽度，评价仪器的实际分辨能力。
 
 \section{团队分工}
 两位成员共同参与课题原理分析、预实验、实验及讨论，并根据汇报和文稿工作有所侧重。
@@ -467,6 +472,7 @@ F--P 干涉仪的相邻透射峰之间具有有限的自由光谱范围。宽波
 \bibitem{yuan2023} Yuan S F, Ma C, Fetaya E, et al. Geometric deep optical sensing[J]. \textit{Science}, 2023, 379(6637): eade1220. \url{https://doi.org/10.1126/science.ade1220}.
 \bibitem{wang2025} Wang F K, Fang S, Zhang Y, Wang Q J. 2D computational photodetectors enabling multidimensional optical information perception[J]. \textit{Nature Communications}, 2025, 16: 6791. \url{https://doi.org/10.1038/s41467-025-61924-6}.
 \bibitem{yang2021} Yang Z Y, Albrow-Owen T, Cai W W, Hasan T. Miniaturization of optical spectrometers[J]. \textit{Science}, 2021, 371(6528): eabe0722. \url{https://doi.org/10.1126/science.abe0722}.
+\bibitem{nie2019classification} 聂建华, 刘加庆, 孟鑫, 韩顺利. 光谱分析仪器分类及研究现状[J]. \textit{红外}, 2019, 40(6): 44--48. \url{https://doi.org/10.3969/j.issn.1672-8785.2019.06.007}.
 \bibitem{dasilva2018} da Silva M, Panda S, Tiwari D, Nair S, Jadhav A. Design and implementation of low cost optical spectrometer[C]. ICICCT, 2018: 1904--1908. \url{https://doi.org/10.1109/ICICCT.2018.8473130}.
 \bibitem{likith2021} Likith G, Jayram N D, Yaswanth B, et al. Designing of low-cost spectrometer for sensor application[J]. \textit{Journal of Optics}, 2021, 50: 489--494. \url{https://doi.org/10.1007/s12596-021-00707-w}.
 \bibitem{trindade2014} Trindade A, Falcão B, Carramate L F N D, et al. Low-cost spectro-graph based on a WebCam: A student project[J]. \textit{International Journal of Electrical Engineering and Education}, 2014, 51(1): 1--11. \url{https://doi.org/10.7227/IJEEE.51.1.1}.
