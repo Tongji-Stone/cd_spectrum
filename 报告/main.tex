@@ -370,7 +370,13 @@ F--P 干涉仪的相邻透射峰之间具有有限的自由光谱范围。宽波
     \includegraphics[width=\linewidth]{fig/setup_slit_1122.jpg}\\
     （c）狭缝与光源
   \end{minipage}
-  \caption{光盘光谱仪装置实拍。}
+
+  \smallskip
+  \begin{minipage}[t]{0.30\textwidth}\centering
+    \includegraphics[width=\linewidth]{fig/setup_lens_1122.jpg}\\
+    （d）消色差透镜
+  \end{minipage}
+  \caption{光盘光谱仪装置及消色差透镜实拍。}
   \label{fig:apparatus-1122}
 \end{figure}
 
@@ -404,6 +410,146 @@ F--P 干涉仪的相邻透射峰之间具有有限的自由光谱范围。宽波
 测量时记录狭缝宽度、光盘类型、照明位置和相机曝光等设置。在已完成波长标定后，从图像中选取光谱区域并沿谱线长度方向积分，得到光强随波长的分布。测量孤立谱线时，可由曲线的半高全宽比较不同条件下的展宽；测量相邻谱线时，同时观察峰的位置及两峰之间的谷值，以评价谱线的分离情况。
 
 \subsection{实验测量数据与结果分析}
+\subsubsection{狭缝宽度对谱线的影响}
+使用氖泡照明，分别以较小和较大的狭缝宽度拍摄 DVD 的衍射光谱。图\ref{fig:slit-direct-1122}为光线不经过基板时的结果：两种条件下均能观察到红、黄及较弱的绿色谱线；小狭缝照片中的多条红色谱线较细，大狭缝照片中的亮线更宽、更明亮，相邻亮线之间更容易连成一片。这与狭缝缩窄可以减小狭缝像宽度、同时降低通光量的趋势一致。后续可以结合图像强度曲线比较谱线宽度，选择兼顾亮度和谱线分离的狭缝宽度。
+
+\begin{figure}[htbp]
+  \centering
+  \begin{minipage}[t]{0.31\textwidth}\centering
+    \includegraphics[width=\linewidth]{fig/exp_1122_slit_narrow.jpg}\\
+    （a）小狭缝
+  \end{minipage}\hspace{1em}
+  \begin{minipage}[t]{0.31\textwidth}\centering
+    \includegraphics[width=\linewidth]{fig/exp_1122_slit_wide.jpg}\\
+    （b）大狭缝
+  \end{minipage}
+  \caption{不经过基板时，不同狭缝宽度下的 DVD 衍射光谱。}
+  \label{fig:slit-direct-1122}
+\end{figure}
+
+光线经过 DVD 基板时，我们也分别拍摄了大、小狭缝的光谱，如图\ref{fig:slit-substrate-1122}所示。两张照片都能辨认出黄、红色谱线；大狭缝照片中的谱线更宽，部分亮线相互靠近。可见通过调节狭缝，能够改变光谱图中的亮线宽度和分离程度。
+
+\begin{figure}[htbp]
+  \centering
+  \begin{minipage}[t]{0.31\textwidth}\centering
+    \includegraphics[width=\linewidth]{fig/exp_1122_substrate_narrow.jpg}\\
+    （a）小狭缝
+  \end{minipage}\hspace{1em}
+  \begin{minipage}[t]{0.31\textwidth}\centering
+    \includegraphics[width=\linewidth]{fig/exp_1122_substrate_wide.jpg}\\
+    （b）大狭缝
+  \end{minipage}
+  \caption{经过基板时，不同狭缝宽度下的 DVD 衍射光谱。}
+  \label{fig:slit-substrate-1122}
+\end{figure}
+
+\subsubsection{光盘种类和基板对光谱的影响}
+使用手电筒照明，在小狭缝条件下分别拍摄 CD-R 和 DVD 的彩色光带，并对比光线经过和不经过基板的情况，见图\ref{fig:disc-substrate-1122}。CD-R 的两张照片中均可看到从蓝、绿到红的色散光带；DVD 的照片中也能看到多种颜色沿不同方向展开。两种光盘的光谱展开形态不同，说明更换光盘后需要重新调整光盘和手机的相对位置，以便接收感兴趣的波段。
+
+同一种光盘的两种基板条件下，照片中的光带位置、形状和背景均有变化。实验中可以通过翻转或处理光盘，选择适合观察的入射一侧；在进一步比较谱线清晰度时，还应固定光源、拍摄位置和曝光设置。
+
+\begin{figure}[htbp]
+  \centering
+  \begin{minipage}[t]{0.28\textwidth}\centering
+    \includegraphics[width=\linewidth]{fig/exp_1122_cd_direct.jpg}\\
+    （a）CD-R，不经过基板
+  \end{minipage}\hspace{1em}
+  \begin{minipage}[t]{0.28\textwidth}\centering
+    \includegraphics[width=\linewidth]{fig/exp_1122_cd_substrate.jpg}\\
+    （b）CD-R，经过基板
+  \end{minipage}
+
+  \smallskip
+  \begin{minipage}[t]{0.28\textwidth}\centering
+    \includegraphics[width=\linewidth]{fig/exp_1122_dvd_direct.jpg}\\
+    （c）DVD，不经过基板
+  \end{minipage}\hspace{1em}
+  \begin{minipage}[t]{0.28\textwidth}\centering
+    \includegraphics[width=\linewidth]{fig/exp_1122_dvd_substrate.jpg}\\
+    （d）DVD，经过基板
+  \end{minipage}
+  \caption{手电筒照明下 CD-R、DVD 及基板条件的对比。}
+  \label{fig:disc-substrate-1122}
+\end{figure}
+
+\subsubsection{透镜位置与光谱成像}
+在小狭缝、光线经过 DVD 基板的条件下，我们还加入消色差透镜进行准直，结果见图\ref{fig:lens-adjust-1122}。未加透镜时可看到一组红、黄色谱线；加入透镜的这次记录中，透镜光轴存在倾斜，画面中仍可看到部分红、黄和绿色光带。透镜的位置和方向会影响入射光束以及手机接收到的光谱，装调时需要调整狭缝与透镜的相对位置，并使透镜对准光盘照明区域，再比较谱线的清晰程度。
+
+\begin{figure}[htbp]
+  \centering
+  \begin{minipage}[t]{0.31\textwidth}\centering
+    \includegraphics[width=\linewidth]{fig/exp_1122_substrate_narrow.jpg}\\
+    （a）未加准直透镜
+  \end{minipage}\hspace{1em}
+  \begin{minipage}[t]{0.31\textwidth}\centering
+    \includegraphics[width=\linewidth]{fig/exp_1122_lens_tilt.jpg}\\
+    （b）加入透镜，光轴倾斜
+  \end{minipage}
+  \caption{DVD 光谱观察中加入透镜前后的照片。}
+  \label{fig:lens-adjust-1122}
+\end{figure}
+
+\subsubsection{钠灯与曝光设置}
+我们还使用实验室钠灯拍摄了光谱，如图\ref{fig:sodium-exposure-1122}所示。两次拍摄均出现明显的黄色亮线；其中一张亮线中心发白、周围泛光较强，另一张的黄色亮线轮廓更清楚。调整曝光有助于避免强谱线过曝，并保留其附近的图像细节。钠灯照片为后续的波长标定和钠双线观察提供了实验基础。
+
+\begin{figure}[htbp]
+  \centering
+  \begin{minipage}[t]{0.31\textwidth}\centering
+    \includegraphics[width=\linewidth]{fig/exp_1122_sodium_a.jpg}\\
+    （a）较亮的曝光效果
+  \end{minipage}\hspace{1em}
+  \begin{minipage}[t]{0.31\textwidth}\centering
+    \includegraphics[width=\linewidth]{fig/exp_1122_sodium_b.jpg}\\
+    （b）较暗的曝光效果
+  \end{minipage}
+  \caption{不同曝光下的钠灯光谱照片。}
+  \label{fig:sodium-exposure-1122}
+\end{figure}
+
+\subsubsection{蓝光光盘的观察范围}
+蓝光光盘的不同观察方向呈现出不同颜色的光带，如图\ref{fig:bd-range-1122}所示：依次可以看到以蓝色为主、蓝绿共存、以绿色为主的区域；手电筒照明照片也显示出局部彩色光带。实验记录中，继续改变观察角度会受到装置空间限制。调整光盘角度和手机观察位置，可以选择接收到的波段；为了记录更宽范围的光谱，需要为衍射光和相机留出足够的角度空间。
+
+\begin{figure}[htbp]
+  \centering
+  \begin{minipage}[t]{0.28\textwidth}\centering
+    \includegraphics[width=\linewidth]{fig/exp_1122_bd_blue.jpg}\\
+    （a）蓝色区域
+  \end{minipage}\hspace{1em}
+  \begin{minipage}[t]{0.28\textwidth}\centering
+    \includegraphics[width=\linewidth]{fig/exp_1122_bd_blue_green.jpg}\\
+    （b）蓝绿区域
+  \end{minipage}
+
+  \smallskip
+  \begin{minipage}[t]{0.28\textwidth}\centering
+    \includegraphics[width=\linewidth]{fig/exp_1122_bd_green.jpg}\\
+    （c）绿色区域
+  \end{minipage}\hspace{1em}
+  \begin{minipage}[t]{0.28\textwidth}\centering
+    \includegraphics[width=\linewidth]{fig/exp_1122_bd_partial.jpg}\\
+    （d）手电筒照明
+  \end{minipage}
+  \caption{蓝光光盘在不同观察位置的色散现象。}
+  \label{fig:bd-range-1122}
+\end{figure}
+
+\subsubsection{零级像与不同衍射级次}
+图\ref{fig:orders-1122}（a）记录了 DVD 的零级亮像；图（b）中 CD 上不同级次的彩色光带相互交叠，实验记录将其中一处标记为二级紫光与三级红光重合。不同级次的光可能进入相近方向，因此选择拍摄位置和光谱级次时，需要考虑级次重叠对光谱辨认的影响。
+
+\begin{figure}[htbp]
+  \centering
+  \begin{minipage}[t]{0.31\textwidth}\centering
+    \includegraphics[width=\linewidth]{fig/exp_1122_zero_order.jpg}\\
+    （a）DVD 零级亮像
+  \end{minipage}\hspace{1em}
+  \begin{minipage}[t]{0.31\textwidth}\centering
+    \includegraphics[width=\linewidth]{fig/exp_1122_cd_overlap.jpg}\\
+    （b）CD 不同级次光带
+  \end{minipage}
+  \caption{零级亮像和 CD 上不同衍射级次的光带。}
+  \label{fig:orders-1122}
+\end{figure}
+
 \subsubsection{环状光斑图像的径向分析}
 对已有的环状光斑照片，预处理记录给出了以光斑中心为参考的径向 RGB 通道数据。图\ref{fig:radial-analysis}（a）显示所用照片及径向位置标记，（b）为根据已有数据绘制的各通道数值随半径的变化。不同颜色通道的变化趋势不同，与照片中光带颜色随半径变化的现象相对应。
 
@@ -449,7 +595,7 @@ F--P 干涉仪的相邻透射峰之间具有有限的自由光谱范围。宽波
 分辨率的测量和优化将在后续实验中开展。
 
 \subsection{实验结论}
-预实验中，CD-R 和 DVD-R 受光照后在光屏上形成彩色光带；遮挡部分盘面后，观察到局部弧形光带。对环状光斑照片的径向分析显示，不同半径处的 RGB 通道数值存在变化。
+预实验中，CD-R 和 DVD-R 受光照后在光屏上形成彩色光带；遮挡部分盘面后，观察到局部弧形光带。对环状光斑照片的径向分析显示，不同半径处的 RGB 通道数值存在变化。使用固定结构的光谱仪拍摄到氖泡和钠灯光谱，并比较了狭缝宽度、基板、光盘种类及观察位置对光谱图像的影响。小狭缝照片中的谱线较细，大狭缝照片中的亮线较宽；蓝光光盘的可观察波段随观察位置变化。
 
 \subsection{理论与实验对比}
 光栅色散理论预示不同波长沿不同方向传播，盘面轨道方向的变化会改变局部色散方向；预实验中观察到的彩色环状光带及遮挡后的局部弧带，与这一图像在定性上相符。目前已搭建光谱仪并拍摄到衍射光谱。后续将通过已知谱线进行波长标定，并测量不同狭缝宽度及照明区域下的谱线宽度，评价仪器的实际分辨能力。
