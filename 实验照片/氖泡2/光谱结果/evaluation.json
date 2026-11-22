@@ -1,0 +1,24 @@
+{
+  "wavelength_accuracy": {
+    "n_lines": 13,
+    "rms_residual_nm": 0.22598528307273252,
+    "mean_residual_nm": -8.745141363201234e-15,
+    "median_abs_residual_nm": 0.11910766793107541,
+    "max_abs_residual_nm": 0.6111697688278355,
+    "frac_within_0p5_nm": 0.9230769230769231,
+    "frac_within_1_nm": 1.0
+  },
+  "resolution": {
+    "best_FWHM_nm": 2.2508279270737517,
+    "best_R": 264.1174799945162,
+    "best_line_nm": 594.483,
+    "median_FWHM_clean_nm": 2.3471285056977536,
+    "median_R_clean": 243.7266898479154,
+    "n_clean_lines": 4
+  },
+  "compare_to_neon1": {
+    "neon1_rms_nm": 0.356,
+    "neon1_best_FWHM_nm": 1.24,
+    "neon1_best_R": 437
+  }
+}

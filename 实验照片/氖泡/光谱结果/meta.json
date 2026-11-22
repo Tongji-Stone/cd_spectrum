@@ -1,0 +1,68 @@
+{
+  "image": "氖泡_裁剪.jpg",
+  "dispersion_row_y": 615,
+  "calibration": {
+    "model": "lambda_nm = a + b * x_px",
+    "a": 706.7263292416072,
+    "b_nm_per_px": -0.10316973825233611,
+    "n_matched_lines": 18,
+    "rms_residual_nm": 0.35555528670334763,
+    "primary_anchors": {
+      "yellow_585.249": 1178.0,
+      "green_540.056": 1608.0
+    }
+  },
+  "matched_lines_nm": [
+    671.704,
+    667.828,
+    659.895,
+    650.653,
+    640.225,
+    638.299,
+    633.443,
+    626.649,
+    621.728,
+    616.359,
+    614.306,
+    609.616,
+    607.434,
+    603.0,
+    597.553,
+    594.483,
+    585.249,
+    540.056
+  ],
+  "resolution_note": "Neon lines are narrow; measured FWHM is a practical estimate of instrument Δλ (still includes slight source width, focus, and saturation for bright lines).",
+  "FWHM_examples_nm": [
+    {
+      "lambda_ref_nm": 540.056,
+      "FWHM_nm": 1.2371368305706851,
+      "R": 436.53699950948425
+    },
+    {
+      "lambda_ref_nm": 659.895,
+      "FWHM_nm": 1.96551762960296,
+      "R": 335.7359863179149
+    },
+    {
+      "lambda_ref_nm": 667.828,
+      "FWHM_nm": 2.0473315572696964,
+      "R": 326.19435656558215
+    },
+    {
+      "lambda_ref_nm": 650.653,
+      "FWHM_nm": 2.6408274770447004,
+      "R": 246.38224407151858
+    },
+    {
+      "lambda_ref_nm": 621.728,
+      "FWHM_nm": 2.6520457123502803,
+      "R": 234.43336481897057
+    },
+    {
+      "lambda_ref_nm": 594.483,
+      "FWHM_nm": 2.750031138454844,
+      "R": 216.17318861851916
+    }
+  ]
+}

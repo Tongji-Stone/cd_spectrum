@@ -1,0 +1,21 @@
+{
+  "wavelength_accuracy": {
+    "n_lines": 18,
+    "mean_residual_nm": -0.00011111111111111121,
+    "rms_residual_nm": 0.3555384023640141,
+    "median_abs_residual_nm": 0.251,
+    "max_abs_residual_nm": 0.773,
+    "frac_within_0p5_nm": 0.8888888888888888,
+    "frac_within_1_nm": 1.0,
+    "verdict": "波长标定良好：RMS约0.36 nm，绝大多数线偏差<0.5 nm；绿线540残差略大(+0.77 nm)可能因色散非线性或色差。"
+  },
+  "resolution": {
+    "best_FWHM_nm": 1.237,
+    "best_R": 436.5852869846403,
+    "best_line_nm": 540.056,
+    "median_FWHM_clean_nm": 2.652,
+    "median_R_clean": 234.43740573152334,
+    "note": "过曝/重叠线FWHM偏大已排除(>5nm)；干净线中位FWHM约2.6 nm，R约230–440。对光盘光谱仪本科装置属中上水平；尚不及精密光栅光谱仪(0.1 nm级)。"
+  },
+  "overall": "分立氖谱识别成功、波长轴可信；分辨率足以分开多数红区氖线，绿线最锐。限制来自亮线饱和、部分线重叠与线性色散近似。"
+}
