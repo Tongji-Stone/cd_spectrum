@@ -48,7 +48,7 @@ Data tracks on optical media (e.g. CDs / Blu-ray discs) behave as high-quality r
 \subsubsection{光谱仪的主要技术方案}
 光谱仪可以根据工作波段和光谱获取方式进行分类。从分光技术原理出发，我们可以将光谱仪归纳为衍射型、干涉型、散射型、荧光型、滤光片型和棱镜色散型六类\cite{nie2019classification}。各类方案的基本结构如图\ref{fig:spectrometer-classification}所示。
 
-\begin{figure}[p]
+\begin{figure}[H]
   \centering
   \includegraphics[width=0.96\textwidth,height=0.82\textheight,keepaspectratio]{fig/nie_spectrometer_map.pdf}
   \caption{光谱仪技术方案导图}
@@ -61,9 +61,31 @@ Data tracks on optical media (e.g. CDs / Blu-ray discs) behave as high-quality r
 本课题使用光盘数据轨道产生的衍射来分光，属于图中衍射型方案。下面结合相关研究介绍低成本光盘光谱仪以及高分辨率光谱仪的设计。
 
 
-首先, 在低成本光谱仪方面，da Silva 等报道了以常见器件实现光谱测量的方案\cite{dasilva2018}。Likith 等使用 DVD、摄像头和箱体搭建光谱仪，将经过样品的光谱记录并用于不同溶液的观察\cite{likith2021}。其设计将光盘的周期结构用作色散元件，并利用摄像头采集光谱图像，为本课题使用数字光盘提供了可参考的实例。其两种装置如图\ref{fig:likith-spectrometer}所示。
+天狼星的实验室利用狭缝、光盘和纸盒制作了简易光谱仪\cite{sirius_disc_spectrometer}；大军的物理实验也展示了使用 DVD 搭建光谱仪的方案\cite{dajun_disc_spectrometer}。两种装置均以光盘反射层作为衍射光栅，光通过狭缝后直接照射光盘，结构如图\ref{fig:video-disc-spectrometers}所示。
 
-\begin{figure}[htbp]
+\begin{figure}[H]
+  \centering
+  \begin{minipage}[t]{0.38\textwidth}\centering
+    \includegraphics[width=\linewidth]{fig/video_sirius_spectrometer.jpg}\\
+    （a）纸盒光谱仪
+  \end{minipage}\hspace{1em}
+  \begin{minipage}[t]{0.38\textwidth}\centering
+    \includegraphics[width=\linewidth]{fig/video_dajun_spectrometer.jpg}\\
+    （b）光盘光谱仪
+  \end{minipage}
+  \caption{两种光盘光谱仪的装置。}
+  \label{fig:video-disc-spectrometers}
+\end{figure}
+
+Theremino 项目提供了低成本光谱仪的制作方案和配套软件。其摄像头方案利用狭缝限制入射光，经衍射光栅分光后由摄像头记录光谱图像；项目还提供了基于线阵传感器的方案，以及光栅选择、装调和光源等制作资料\cite{theremino_construction,theremino_software}。这些方案展示了从光学结构到光谱采集的完整实现过程。
+
+配套的 Theremino Spectrometer 软件可以接收摄像头图像，选取图像中的光谱区域并显示光强曲线；使用已知波长的谱线进行波长标定后，可以将图像位置转换为波长。软件还提供背景扣除、参考光谱、光谱平均、峰值查看及数据导出等功能，可保存光谱图像和 CSV 等格式的数据\cite{theremino_help}。对于本课题，固定相机并完成波长标定后，可以参考这一流程提取氖泡的光谱曲线，比较不同狭缝宽度或光盘条件下的谱线形状。
+
+
+
+在低成本光谱仪方面，da Silva 等报道了以常见器件实现光谱测量的方案\cite{dasilva2018}。Likith 等使用 DVD、摄像头和箱体搭建光谱仪，将经过样品的光谱记录并用于不同溶液的观察\cite{likith2021}。其设计将光盘的周期结构用作色散元件，并利用摄像头采集光谱图像，为本课题使用数字光盘提供了可参考的实例。其两种装置如图\ref{fig:likith-spectrometer}所示。
+
+\begin{figure}[H]
   \centering
   \begin{minipage}[c]{0.48\textwidth}\centering
     \includegraphics[width=\linewidth]{fig/likith2021_cardboard.png}\\
@@ -73,14 +95,14 @@ Data tracks on optical media (e.g. CDs / Blu-ray discs) behave as high-quality r
     \includegraphics[width=\linewidth]{fig/likith2021_box.png}\\
     （b）箱式样品测量装置
   \end{minipage}
-  \caption{Likith 等的低成本光谱仪，分别引自文献\cite{likith2021}的图 1 和图 4。}
+  \caption{低成本光谱仪的两种结构。}
   \label{fig:likith-spectrometer}
 \end{figure}
 
 
-Trindade 等制作了基于网络摄像头的低成本光谱仪：在遮光箱内使用刀片构成可调狭缝，以光盘作为衍射元件，由摄像头记录衍射光谱；作者选取二级衍射光进行采集，并利用已知光源进行波长标定。该装置用于测量可见光 LED 和高压钠灯的光谱，作者还将 LED 光谱与商用光谱仪的测量结果进行比较\cite{trindade2014}。这一工作展示了使用相机采集光谱和通过参考仪器检验结果的方法；装置中的狭缝宽度、光路装调和探测器采样均需结合测量任务考虑。图\ref{fig:trindade-spectrometer}给出了该装置的示意图和实物图。
+Trindade 等制作了基于网络摄像头的低成本光谱仪：在遮光箱内使用刀片构成可调狭缝，以光盘作为衍射元件，由摄像头记录衍射光谱；作者选取二级衍射光进行采集，并利用已知光源进行波长标定。该装置用于测量可见光 LED 和高压钠灯的光谱，作者还将 LED 光谱与商用光谱仪的测量结果进行比较\cite{trindade2014}。这一工作展示了使用相机采集光谱和通过参考仪器检验结果的方法；装置中的狭缝宽度、光路装调和探测器采样均需结合测量任务考虑。图\ref{fig:trindade-spectrometer}给出了 Ferreira 和 André 介绍的该装置示意图和实物图\cite{ferreira2014ciceco}。
 
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
   \begin{minipage}[c]{0.46\textwidth}\centering
     \includegraphics[width=\linewidth]{fig/trindade2014_scheme.png}\\
@@ -90,32 +112,16 @@ Trindade 等制作了基于网络摄像头的低成本光谱仪：在遮光箱�
     \includegraphics[width=\linewidth]{fig/trindade2014_photo.png}\\
     （b）装置实物图
   \end{minipage}
-  \caption{基于摄像头的光盘光谱仪：图片引自 Ferreira 和 André 的项目介绍\cite{ferreira2014ciceco}图 1，该项目的研究论文见文献\cite{trindade2014}。}
+  \caption{基于摄像头的光盘光谱仪。}
   \label{fig:trindade-spectrometer}
 \end{figure}
 
-
-Sun 等对 DVD-R 金属层的表面形貌进行了测量。作者使用原子力显微镜观察到周期性起伏，其所测一张样品的周期约为 $740\,\mathrm{nm}$、峰谷高度差约为 $86\,\mathrm{nm}$；文中还报告了其他厂商样品的测量结果\cite{sun2018dvd}。这些结果说明光盘轨道具有可供衍射利用的周期结构，也提示不同盘片的实际结构参数需要结合测量确定。图\ref{fig:sun-dvd}展示了文中的 DVD-R 结构及所测金属层形貌。
-
-\begin{figure}[htbp]
-  \centering
-  \begin{minipage}[c]{0.48\textwidth}\centering
-    \includegraphics[width=\linewidth,height=6cm,keepaspectratio]{fig/sun2018_disc_structure.png}\\
-    （a）DVD-R 结构
-  \end{minipage}\hfill
-  \begin{minipage}[c]{0.48\textwidth}\centering
-    \includegraphics[width=\linewidth,height=6cm,keepaspectratio]{fig/sun2018_afm_profile.png}\\
-    （b）金属层表面形貌与剖面
-  \end{minipage}
-  \caption{DVD-R 结构与金属层轨道形貌，分别引自 Sun 等\cite{sun2018dvd}图 1 和图 2(b)、(c)；原文采用 CC BY-NC 3.0 许可。}
-  \label{fig:sun-dvd}
-\end{figure}
 
 
 对于更广泛的光谱仪设计来说, Yang 等综述了光谱仪的小型化发展，介绍了色散型、干涉型及计算型等技术路线，以及光谱范围、分辨率和器件尺寸之间的设计问题\cite{yang2021}。
 图\ref{fig:yang-literature}展示了综述中的色散型与窄带滤波型光谱仪方案：前者通过色散元件将不同波长导向不同位置，后者通过滤波器选择波段。
 
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
   \begin{minipage}[t]{0.48\textwidth}\centering
     \includegraphics[width=\linewidth]{fig/yang2021_dispersion.png}\\
@@ -150,7 +156,7 @@ F--P 干涉仪的相邻透射峰之间具有有限的自由光谱范围。宽波
     \includegraphics[width=\linewidth]{fig/zhong_original_grating.png}\\
     （b）微型曲面光栅光谱仪
   \end{minipage}
-  \caption{F--P 干涉仪与曲面光栅光谱仪的结构，分别引自钟卉\cite{zhong2020micro}的图 1 和图 3。}
+  \caption{F--P 干涉仪与曲面光栅光谱仪的结构。}
   \label{fig:fp-grating-literature}
 \end{figure}
 \section{预实验现象}
@@ -171,7 +177,7 @@ F--P 干涉仪的相邻透射峰之间具有有限的自由光谱范围。宽波
     \includegraphics[width=\linewidth,height=4.2cm,keepaspectratio]{fig/pre_mask.jpg}\\
     （c）遮挡后的光带
   \end{minipage}
-  \caption{光盘色散的预实验现象（2026 年 11 月 3 日实验照片）。}
+  \caption{光盘色散的预实验现象。}
   \label{fig:preliminary}
 \end{figure}
 
@@ -217,9 +223,52 @@ F--P 干涉仪的相邻透射峰之间具有有限的自由光谱范围。宽波
 \end{figure}
 
 
+\subsection{光盘色散的数值模拟}
+为了分析光盘轨道形状对光谱的影响，我们编写了可在浏览器中运行的轻量化 HTML 模拟程序，界面如图\ref{fig:disc-simulation-interface}所示。程序以局部反射光栅关系计算衍射方向，并分别采用平行划线、同心圆划线和螺线划线描述光盘轨道；可以调整光盘轨距、入射角、照明位置、准直光束直径、狭缝宽度、光源和衍射级次，观察光路和探测器上的光谱变化。
+
+图中以 DVD 轨距和氖灯光源为例：平行划线给出近似直线排列的谱线，而同心圆和螺线轨道产生弯曲的彩色谱线。这与我们用氖泡照射光盘时观察到的红、黄、绿光带及弧形分布在形态上较为吻合，说明轨道方向随盘面位置变化是产生弧形光带的重要原因。通过调节照明区域和入射角，还可以观察轨道曲率对光谱形状的影响，为后续选择盘面照明位置提供参考。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.76\textwidth]{fig/disc_simulation_interface.png}
+  \caption{光盘反射光栅模拟界面。}
+  \label{fig:disc-simulation-interface}
+\end{figure}
+
+\subsection{记录点排列对衍射光谱的影响}
+光盘沿轨道分布着用于记录信息的微小结构。为了研究这些结构对光谱的影响，我们将局部光盘轨道展开为等间距直线，用相干叠加计算衍射光场，并比较连续槽、周期性重复的 $0101$ 和 $0100$ 坑台图案、轨道之间错开的 $0101$ 图案，以及随机长度的坑台排列。这里的 $0101$ 和 $0100$ 表示计算中构造的周期性坑台图案，分别用于观察不同排列带来的衍射变化。
+
+图\ref{fig:record-pattern-dvd}给出了 DVD 条件下的模拟结果：取轨距 $0.74\,\mu\mathrm{m}$、入射波长 $589\,\mathrm{nm}$、入射角 $65^\circ$，照明区域径向宽度为 $1.00\,\mathrm{mm}$，沿轨长度为 $0.25\,\mathrm{mm}$。图中间比较了各图案的归一化径向主峰，连续槽、周期图案和随机图案的曲线基本重合；在这一模型条件下，其等效半高全宽均约为 $0.386\,\mathrm{nm}$。当径向照明孔径减半时，主峰变宽，等效半高全宽约为 $0.773\,\mathrm{nm}$。因此，这组计算中主峰宽度主要受径向有效照明范围影响，沿轨记录点的断续排列对主峰宽度的影响较小。
+
+周期性记录点还会沿轨道方向产生额外的衍射副峰；记录点在相邻轨道间错开时，副峰的空间分布发生变化，随机排列则使部分能量分散到较宽范围。记录点排列因此会影响光谱附近的背景和弱信号辨认。上述宽度是给定条件下的模型计算结果，后续可通过实测谱线宽度和背景检验光盘结构的影响。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.85\textwidth]{fig/record_pattern_dvd.png}
+  \caption{不同记录点排列下的径向主峰与沿轨功率分布。}
+  \label{fig:record-pattern-dvd}
+\end{figure}
+
 \section{理论分析}
 \subsection{光栅衍射的物理机理}
-数字光盘上的数据轨道近似周期排列，光照射到盘面后，相邻轨道反射的光在空间中相干叠加。由于不同方向上相邻轨道产生的光程差不同，某些方向的光相长干涉，形成各级衍射光。不同波长对应的相长干涉方向不同，因此复色光经过光盘后会产生色散。
+数字光盘上的数据轨道近似周期排列，光照射到盘面后，相邻轨道反射的光在空间中相干叠加。由于不同方向上相邻轨道产生的光程差不同，某些方向的光相长干涉，形成各级衍射光。不同波长对应的相长干涉方向不同，因此复色光经过光盘后会产生色散。图\ref{fig:grating-geometry}（b）展示了相邻刻线的光程差\cite{li1999spectrometer}。
+
+
+有人使用原子力显微镜观察金属层的表面形貌进行了测量，观察到周期性起伏，其所测DVD的周期约为 $740\,\mathrm{nm}$、峰谷高度差约为 $86\,\mathrm{nm}$。结果说明光盘轨道具有可供衍射利用的周期结构。\ref{fig:sun-dvd} \cite{sun2018dvd}。
+
+\begin{figure}[htbp]
+  \centering
+  \begin{minipage}[c]{0.48\textwidth}\centering
+    \includegraphics[width=\linewidth,height=6cm,keepaspectratio]{fig/sun2018_disc_structure.png}\\
+    （a）DVD-R 结构
+  \end{minipage}\hfill
+  \begin{minipage}[c]{0.48\textwidth}\centering
+    \includegraphics[width=\linewidth,height=6cm,keepaspectratio]{fig/sun2018_afm_profile.png}\\
+    （b）金属层表面形貌与剖面
+  \end{minipage}
+  \caption{DVD-R 结构与金属层轨道形貌。}
+  \label{fig:sun-dvd}
+\end{figure}
 
 \begin{figure}[htbp]
   \centering
@@ -231,7 +280,7 @@ F--P 干涉仪的相邻透射峰之间具有有限的自由光谱范围。宽波
     \includegraphics[width=\linewidth,height=4.5cm,keepaspectratio]{fig/book_grating_original.png}\\
     （b）相邻刻线与光程差
   \end{minipage}
-  \caption{平面反射光栅几何示意。（a）为本文角度定义；（b）引自李全臣、蒋月娟编著的《光谱仪器原理》\cite{li1999spectrometer}图 3--14。}
+  \caption{平面反射光栅的入射、衍射方向与光程差。}
   \label{fig:grating-geometry}
 \end{figure}
 在照明区域足够小、轨道间距近似不变时，可以将局部盘面视为平面反射光栅。设光栅周期为 $d$，入射光和衍射光均位于垂直于局部轨道的平面内。以光栅表面法线为基准，将从光栅指向光源和从光栅指向观察方向的角度分别记为 $\alpha$ 和 $\beta$；两角以法线同一侧为正、另一侧为负。相邻轨道的光程差为 $d(\sin\alpha+\sin\beta)$，相长干涉条件给出反射光栅方程\cite{singh1999gratings}
@@ -248,6 +297,34 @@ F--P 干涉仪的相邻透射峰之间具有有限的自由光谱范围。宽波
 \end{equation}
 其绝对值表示单位波长变化引起的衍射角变化。若成像透镜在近轴条件下将小角度差转化为焦平面上的位置差，则线色散率可近似写为 $|\mathrm{d}x/\mathrm{d}\lambda|\approx f|\mathrm{d}\beta/\mathrm{d}\lambda|$，其中 $f$ 为成像透镜焦距。光栅轨道间距、工作级次、入射角和成像条件共同决定探测器上的光谱展开情况。
 
+
+\subsection{不同光盘的结构}
+光盘按存储密度可分为 CD、DVD 和蓝光光盘（Blu-ray Disc）等，它们的数据轨道间距不同。常见 CD 的轨距约为 $1600\,\mathrm{nm}$，DVD 约为 $740\,\mathrm{nm}$，蓝光光盘约为 $320\,\mathrm{nm}$\cite{sun2018dvd,sony2002bluray}。不同光盘的数据轨道和读取结构如图\ref{fig:disc-types-tracks}所示。光盘轨道可作为光栅刻线，轨距改变时，同一波长和衍射级次对应的衍射角也会改变，因此选用不同光盘需要调整观察方向和装置几何。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.72\textwidth]{fig/disc_types_tracks.png}
+  \caption{不同光盘的轨道与读取结构。}
+  \label{fig:disc-types-tracks}
+\end{figure}
+
+按数据写入方式，光盘又可分为只读、一次刻录和可重复擦写等类型。以 DVD 为例，DVD-ROM 在制造时压制出记录信息的凹坑和平台；DVD-R、DVD+R 可由刻录机写入一次，常见的记录层使用感光染料；DVD-RW、DVD+RW 则利用相变材料实现重复写入\cite{locopticalmedia}。DVD-ROM 与一次刻录型 DVD 的轨道结构示意见图\ref{fig:rom-recordable}。其中 $+$ 和 $-$ 表示不同的可刻录格式，其记录轨道和寻址方式有所区别。光盘中的基板、记录层和反射层会影响光到达轨道的方式及反射光的强度，在制作光盘光谱仪时可以选择从基板侧照射，或对光盘进行分层后观察。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.55\textwidth]{fig/disc_rom_recordable.jpg}
+  \caption{DVD-ROM 与一次刻录型 DVD 的轨道结构。}
+  \label{fig:rom-recordable}
+\end{figure}
+
+为了增加容量，光盘还可采用多层存储技术，即在同一读取面设置多个记录层，通过改变读取光束的焦点来读取不同层的信息；靠近读取面的一层需要允许部分光透过，以便读取更深的记录层。以 DVD 为例，DVD-5 为单面单层，DVD-9 为单面双层，DVD-10 为双面单层，DVD-18 为双面双层\cite{avid2005dvd}，其结构如图\ref{fig:dvd-layer-types}所示。多层结构会增加光在不同界面反射和透射的可能，制作光谱仪时需要结合实际盘片结构，观察不同照射方式下的光带和背景。
+
+\begin{figure}[htbp]
+  \centering
+  \includegraphics[width=0.55\textwidth]{fig/dvd_layer_types.png}
+  \caption{DVD 的单面、双面及多层结构。}
+  \label{fig:dvd-layer-types}
+\end{figure}
 
 \subsection{光盘轨道曲率的影响}
 光盘轨道由内向外呈螺旋排列，局部可以近似为一组圆弧。轨道的局部方向随照明位置改变，垂直于轨道的色散方向也随之转动。若一次照亮较大的盘面区域，不同位置产生的光谱会沿不同方向展开，叠加后可能形成弯曲的谱线或环状光带。
@@ -619,6 +696,8 @@ F--P 干涉仪的相邻透射峰之间具有有限的自由光谱范围。宽波
 \bibitem{wang2025} Wang F K, Fang S, Zhang Y, Wang Q J. 2D computational photodetectors enabling multidimensional optical information perception[J]. \textit{Nature Communications}, 2025, 16: 6791. \url{https://doi.org/10.1038/s41467-025-61924-6}.
 \bibitem{yang2021} Yang Z Y, Albrow-Owen T, Cai W W, Hasan T. Miniaturization of optical spectrometers[J]. \textit{Science}, 2021, 371(6528): eabe0722. \url{https://doi.org/10.1126/science.abe0722}.
 \bibitem{nie2019classification} 聂建华, 刘加庆, 孟鑫, 韩顺利. 光谱分析仪器分类及研究现状[J]. \textit{红外}, 2019, 40(6): 44--48. \url{https://doi.org/10.3969/j.issn.1672-8785.2019.06.007}.
+\bibitem{sirius_disc_spectrometer} 天狼星的实验室. 如何用5毛钱工艺手搓光谱仪[视频]. 哔哩哔哩. \url{https://www.bilibili.com/video/BV1yC4y1V7kS}.
+\bibitem{dajun_disc_spectrometer} 大军的物理实验. 利用DVD手搓光谱仪[视频]. 哔哩哔哩. \url{https://www.bilibili.com/video/BV1R4VE6CEwn}.
 \bibitem{dasilva2018} da Silva M, Panda S, Tiwari D, Nair S, Jadhav A. Design and implementation of low cost optical spectrometer[C]. ICICCT, 2018: 1904--1908. \url{https://doi.org/10.1109/ICICCT.2018.8473130}.
 \bibitem{likith2021} Likith G, Jayram N D, Yaswanth B, et al. Designing of low-cost spectrometer for sensor application[J]. \textit{Journal of Optics}, 2021, 50: 489--494. \url{https://doi.org/10.1007/s12596-021-00707-w}.
 \bibitem{trindade2014} Trindade A, Falcão B, Carramate L F N D, et al. Low-cost spectro-graph based on a WebCam: A student project[J]. \textit{International Journal of Electrical Engineering and Education}, 2014, 51(1): 1--11. \url{https://doi.org/10.7227/IJEEE.51.1.1}.
@@ -628,6 +707,12 @@ F--P 干涉仪的相邻透射峰之间具有有限的自由光谱范围。宽波
 \bibitem{zhong2020micro} 钟卉. 高分辨率宽光谱范围微型光谱仪的设计与分析[J]. \textit{激光与光电子学进展}, 2020, 57(15): 153004. \url{https://doi.org/10.3788/LOP57.153004}.
 \bibitem{li1999spectrometer} 李全臣, 蒋月娟. 光谱仪器原理[M]. 北京: 北京理工大学出版社, 1999: 50.
 \bibitem{singh1999gratings} Singh S. Diffraction gratings: aberrations and applications[J]. \textit{Optics and Laser Technology}, 1999, 31(3): 195--218.
+\bibitem{sony2002bluray} Sony. Large Capacity Optical Disc Video Recording Format ``Blu-ray Disc'' Established[EB/OL]. 2002. \url{https://www.sony.com/en/SonyInfo/News/Press/200202/02-0219E/}.
+\bibitem{locopticalmedia} Library of Congress. CD / CD-R and DVD-R RW Longevity Research[EB/OL]. \url{https://wwws.loc.gov/preservation/scientists/projects/cd-r_dvd-r_rw_longevity.html}.
+\bibitem{avid2005dvd} Avid. \textit{Avid DVD by Sonic User's Guide}[M]. Appendix A. \url{https://resources.avid.com/supportfiles/attach/aviddvd.pdf}.
+\bibitem{theremino_construction} Theremino System. \textit{Theremino Spectrometer: Construction with WebCam}[EB/OL]. \url{https://www.theremino.com/wp-content/uploads/files/Theremino_Spectrometer_Construction_WebCam_ENG.pdf}.
+\bibitem{theremino_software} Theremino System. Theremino Spectrometer[EB/OL]. \url{https://www.theremino.com/en/downloads/automation#spectrometer}.
+\bibitem{theremino_help} Theremino System. \textit{Theremino Spectrometer Help}[EB/OL]. \url{https://www.theremino.com/wp-content/uploads/files/Theremino_Spectrometer_Help_ENG.pdf}.
 \end{thebibliography}
 \end{document}
 
