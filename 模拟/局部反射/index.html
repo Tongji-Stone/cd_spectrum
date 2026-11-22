@@ -5,56 +5,47 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>光盘反射光栅：几何模型比较</title>
   <style>
-    :root { color-scheme: dark; --bg:#10141c; --panel:#181f2b; --line:#2c3748; --text:#e9eef7; --muted:#9eabc0; --accent:#7ec8ff; }
+    :root { color-scheme: dark; --bg:#000; --line:#444; --text:#eee; --muted:#aaa; --accent:#ddd; }
     * { box-sizing:border-box; }
     body { margin:0; background:var(--bg); color:var(--text); font:15px/1.5 system-ui,"Microsoft YaHei",sans-serif; }
     main { max-width:1440px; margin:auto; padding:24px; }
     h1 { margin:0 0 5px; font-size:25px; }
     h2 { margin:0; font-size:17px; }
-    p { margin:5px 0 0; }
-    .sub,.hint { color:var(--muted); }
-    .controls { display:grid; grid-template-columns:repeat(6,minmax(130px,1fr)); gap:12px; margin:20px 0; padding:16px; background:var(--panel); border:1px solid var(--line); border-radius:12px; }
+    .controls { display:grid; grid-template-columns:repeat(6,minmax(130px,1fr)); gap:12px; margin:20px 0; padding:16px; background:var(--bg); border:1px solid var(--line); }
     label { display:block; color:var(--muted); font-size:13px; }
     label span.value { float:right; color:var(--text); font-variant-numeric:tabular-nums; }
     select,input[type=range] { width:100%; margin-top:7px; }
-    select { padding:8px; color:var(--text); background:#101722; border:1px solid var(--line); border-radius:6px; }
-    input[type=range] { accent-color:var(--accent); }
-    .parameter-guide { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:1px; margin:-8px 0 20px; overflow:hidden; background:var(--line); border:1px solid var(--line); border-radius:10px; }
-    .parameter-item { padding:10px 12px; background:#131a25; color:var(--muted); font-size:12px; }
-    .parameter-item b { color:var(--text); font-size:13px; }
-    .source-info { flex:1 0 100%; padding:8px 10px; color:#bdd9ef; background:#111a26; border-radius:7px; font-size:12px; }
-    .section-title { margin:20px 0 10px; display:flex; justify-content:space-between; gap:16px; align-items:baseline; }
-    .section-title p { color:var(--muted); font-size:13px; text-align:right; }
-    .ray-card { background:var(--panel); border:1px solid var(--line); border-radius:12px; overflow:hidden; }
+    select { padding:8px; color:var(--text); background:var(--bg); border:1px solid var(--line); border-radius:0; }
+    input[type=range] { appearance:none; background:transparent; height:18px; }
+    input[type=range]::-webkit-slider-runnable-track { height:4px; background:var(--line); }
+    input[type=range]::-webkit-slider-thumb { appearance:none; width:12px; height:14px; margin-top:-5px; background:var(--accent); }
+    input[type=range]::-moz-range-track { height:4px; background:var(--line); }
+    input[type=range]::-moz-range-thumb { width:12px; height:14px; border:0; border-radius:0; background:var(--accent); }
+    .section-title { margin:20px 0 10px; }
+    .ray-card { background:var(--bg); border:1px solid var(--line); overflow:hidden; }
     #side { height:330px; }
     .ray-readout { display:flex; flex-wrap:wrap; gap:18px; padding:10px 15px 13px; border-top:1px solid var(--line); color:var(--muted); font-size:13px; }
     .ray-readout b { color:var(--text); font-weight:600; }
     .models { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
-    .card { min-width:0; background:var(--panel); border:1px solid var(--line); border-radius:12px; overflow:hidden; }
-    .cardhead { padding:13px 15px 8px; display:flex; justify-content:space-between; gap:8px; align-items:baseline; }
-    .cardhead small { color:var(--muted); }
-    canvas { display:block; width:100%; height:300px; background:#080c12; }
+    .card { min-width:0; background:var(--bg); border:1px solid var(--line); overflow:hidden; }
+    .cardhead { padding:13px 15px 8px; }
+    canvas { display:block; width:100%; height:300px; background:var(--bg); }
     .metrics { padding:10px 15px 14px; display:grid; grid-template-columns:1fr 1fr; gap:8px; border-top:1px solid var(--line); font-variant-numeric:tabular-nums; }
     .metric { color:var(--muted); font-size:12px; }
     .metric b { display:block; color:var(--text); font-size:14px; font-weight:600; }
-    .bottom { display:grid; grid-template-columns:1.2fr 1fr; gap:12px; margin-top:12px; }
-    .note { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:15px; }
-    .note p { color:var(--muted); font-size:13px; }
     .legend { display:flex; flex-wrap:wrap; gap:12px; margin-top:10px; color:var(--muted); font-size:12px; }
-    .dot { display:inline-block; width:9px; height:9px; border-radius:50%; margin-right:5px; }
-    .status { color:var(--accent); min-height:22px; margin-top:10px; }
-    @media(max-width:900px) { .controls { grid-template-columns:repeat(3,minmax(0,1fr)); } .parameter-guide { grid-template-columns:repeat(2,minmax(0,1fr)); } .models { grid-template-columns:1fr; } canvas { height:320px; } .bottom { grid-template-columns:1fr; } .section-title { display:block; } .section-title p { text-align:left; } }
-    @media(max-width:520px) { main { padding:14px; } .controls { grid-template-columns:repeat(2,minmax(0,1fr)); } .parameter-guide { grid-template-columns:1fr; } }
+    .dot { display:inline-block; width:9px; height:9px; margin-right:5px; }
+    @media(max-width:900px) { .controls { grid-template-columns:repeat(3,minmax(0,1fr)); } .models { grid-template-columns:1fr; } canvas { height:320px; } }
+    @media(max-width:520px) { main { padding:14px; } .controls { grid-template-columns:repeat(2,minmax(0,1fr)); } }
   </style>
 </head>
 <body>
 <main>
-  <h1>光盘反射光栅：三种刻线模型</h1>
-  <p class="sub">保持入射条件相同，比较平行刻线、同心圆刻线和螺旋轨道对一级衍射图样的影响。</p>
+  <h1>光盘反射模拟</h1>
 
   <section class="controls" aria-label="模拟条件">
     <label>光盘轨距 d<select id="pitch"><option value="1.6">CD · 1.60 μm</option><option value="0.74" selected>DVD · 0.74 μm</option><option value="0.32">蓝光 · 0.32 μm</option></select></label>
-    <label>入射角（相对法线）<span class="value" id="angleV"></span><input id="angle" type="range" min="10" max="80" step="1" value="65"></label>
+    <label>入射角（相对法线）<span class="value" id="angleV"></span><input id="angle" type="range" min="0" max="90" step="1" value="65"></label>
     <label>准直光束直径 B<span class="value" id="spotV"></span><input id="spot" type="range" min="1" max="16" step="0.5" value="6"></label>
     <label>光斑中心到盘心距离 R<span class="value" id="radiusV"></span><input id="radius" type="range" min="20" max="58" step="1" value="40"></label>
     <label>狭缝宽度<span class="value" id="slitV"></span><input id="slit" type="range" min="10" max="200" step="5" value="50"></label>
@@ -84,39 +75,26 @@
     <label>反射衍射级次<select id="order"><option value="1" selected>+1 级</option><option value="-1">−1 级</option></select></label>
   </section>
 
-  <section class="parameter-guide" aria-label="几何参数说明">
-    <div class="parameter-item"><b>d　光盘轨距</b><br>盘面内相邻数据轨道的距离，决定不同波长分开的角度。</div>
-    <div class="parameter-item"><b>α　入射角</b><br>入射主光线与光盘表面法线之间的夹角。</div>
-    <div class="parameter-item"><b>B、D∥、D⊥　光束与盘面光斑</b><br>B 是准直光束直径；斜入射后盘面光斑为椭圆，D∥ = B/cosα，D⊥ = B。</div>
-    <div class="parameter-item"><b>R　光斑中心到盘心距离</b><br>光盘圆心 O 到光斑中心 P 的距离；R 越小，轨道在光斑内弯得越明显。</div>
-    <div class="parameter-item"><b>a　狭缝宽度</b><br>入射狭缝的物理宽度；越窄谱线越细，但进入系统的光越少。</div>
-    <div class="parameter-item"><b>f　准直焦距</b><br>准直镜焦距。缝宽折成平行光张角为 a/f：焦距越长，同样缝宽造成的入射角散布越小。</div>
-    <div class="parameter-item"><b>Δα　光束发散角宽</b><br>模型中取入射方向的 1σ 角度分布；越大越容易把谱线抹宽。</div>
-  </section>
-
-  <div class="section-title"><h2>① 侧视光路与盘面光斑</h2><p>左侧看光路，右侧从光盘法线方向俯视准直光束在盘面上的投影。</p></div>
+  <h2 class="section-title">侧视光路与盘面光斑</h2>
   <section class="ray-card">
     <canvas id="side" width="1360" height="330" role="img" aria-label="左侧为光源经过狭缝和准直镜照到光盘并发生衍射的侧视光路，右侧为准直圆光束斜入射后在光盘上形成椭圆光斑的俯视图"></canvas>
     <div class="ray-readout" id="rayReadout" aria-live="polite"></div>
   </section>
 
-  <div class="section-title"><h2>② 探测器上看到的光谱</h2><p>三幅图使用同一坐标；颜色就是对应波长，不再用灰度强度图。</p></div>
+  <h2 class="section-title">探测器光谱</h2>
   <section class="models">
-    <article class="card"><div class="cardhead"><h2>1. 平行划线</h2><small>理想平面光栅</small></div><canvas id="c0" width="440" height="300"></canvas><div class="metrics" id="m0"></div></article>
-    <article class="card"><div class="cardhead"><h2>2. 同心圆划线</h2><small>局部法线随半径转动</small></div><canvas id="c1" width="440" height="300"></canvas><div class="metrics" id="m1"></div></article>
-    <article class="card"><div class="cardhead"><h2>3. 螺线划线</h2><small>阿基米德螺线轨道</small></div><canvas id="c2" width="440" height="300"></canvas><div class="metrics" id="m2"></div></article>
+    <article class="card"><h2 class="cardhead">平行划线</h2><canvas id="c0" width="440" height="300"></canvas><div class="metrics" id="m0"></div></article>
+    <article class="card"><h2 class="cardhead">同心圆划线</h2><canvas id="c1" width="440" height="300"></canvas><div class="metrics" id="m1"></div></article>
+    <article class="card"><h2 class="cardhead">螺线划线</h2><canvas id="c2" width="440" height="300"></canvas><div class="metrics" id="m2"></div></article>
   </section>
 
-  <section class="bottom">
-    <div class="note"><h2>怎么看图</h2><p>每幅图是探测器正面看到的一级衍射分布。横轴是色散方向角，纵轴是谱线弯曲的方向。平行模型给出直谱带；圆环和螺线模型会因光斑内刻线方向变化而弯曲、展宽。</p><div class="legend"><span><i class="dot" style="background:#8b5cf6"></i>400–450 nm</span><span><i class="dot" style="background:#21b8d5"></i>450–500 nm</span><span><i class="dot" style="background:#38c878"></i>500–570 nm</span><span><i class="dot" style="background:#f4d34e"></i>570–600 nm</span><span><i class="dot" style="background:#ff4e45"></i>600–700 nm</span></div></div>
-    <div class="note"><h2>模型边界</h2><p>图样由局部光栅方程逐点追迹，并叠加有限光斑的衍射展宽、光束发散，以及狭缝角宽（按 缝宽/准直焦距 估算，焦距可调）。它适合比较几何造成的谱线位置、弯曲和展宽趋势；目前没有纳入真实坑槽剖面、偏振、材料反射率、记录层吸收、翘曲和相干干涉，因此不预测绝对亮度，也不等同于某张实物光盘的精确仿真。</p></div>
-  </section>
-  <div class="status" id="status" role="status"></div>
+  <div class="legend" aria-label="波长图例"><span><i class="dot" style="background:#8b5cf6"></i>400–450 nm</span><span><i class="dot" style="background:#21b8d5"></i>450–500 nm</span><span><i class="dot" style="background:#38c878"></i>500–570 nm</span><span><i class="dot" style="background:#f4d34e"></i>570–600 nm</span><span><i class="dot" style="background:#ff4e45"></i>600–700 nm</span></div>
 </main>
 <script>
 (() => {
   'use strict';
   const W = 440, H = 300, SPATIAL_SAMPLES = 1800;
+  const DISC_RADIUS = 0.06, DISC_HOLE_RADIUS = 0.0075;
   const el = id => document.getElementById(id);
   const controls = ['pitch','angle','spot','radius','slit','focal','divergence','source','order'];
   let scheduled = false;
@@ -130,22 +108,6 @@
     return samples;
   }
   const diskSamples=makeDiskSamples(SPATIAL_SAMPLES);
-
-  const sourceMeta={
-    white:{label:'等能量白光',description:'405–695 nm 各波长等权，用来单独比较光路几何。'},
-    tungsten:{label:'钨卤素灯',description:'约 3000 K 黑体连续谱，红光较强、蓝光较弱。'},
-    xenon:{label:'氙弧灯',description:'近似日光色的宽连续谱；此处只模拟可见区包络。'},
-    sodiumLow:{label:'低压钠灯',description:'以 588.995 nm 和 589.592 nm 的 Na D 双线为主，适合检验分辨率。'},
-    sodiumHigh:{label:'高压钠灯',description:'Na D 区因压力展宽并出现自反转；形状会随灯温、Na/Hg 压力而变。'},
-    mercury:{label:'低压汞灯',description:'采用 404.7、435.8、546.1、577.0、579.1 nm 等常用可见标定线。'},
-    hydrogen:{label:'氢放电灯',description:'采用可见 Balmer 线 Hδ、Hγ、Hβ、Hα。'},
-    cadmium:{label:'镉灯',description:'采用 467.8、480.0、508.6、643.8 nm 等常用标定线。'},
-    mono:{label:'理想单色光',description:'单一 589.0 nm，用来直接观察几何像差。'},
-    helium:{label:'氦放电灯',description:'代表性 He I 可见线，包含强黄线 587.6 nm。'},
-    neon:{label:'氖放电灯',description:'橙红区密集 Ne I 线，视觉上呈典型橙红色。'},
-    argon:{label:'氩放电灯',description:'蓝紫线与 696.5 nm 红线的代表性组合。'},
-    krypton:{label:'氪放电灯',description:'蓝、绿、黄、红区均有代表性 Kr I 线。'}
-  };
 
   function normalizedSpectrum(items) {
     const max=Math.max(...items.map(item=>item.weight),1e-12);
@@ -211,10 +173,14 @@
   }
 
   function readParams() {
+    const angle=Number(el('angle').value);
+    const alpha=angle*Math.PI/180, cosAlpha=Math.cos(alpha);
+    const spot=Number(el('spot').value)*1e-3;
     return {
       d: Number(el('pitch').value)*1e-6,
-      alpha: Number(el('angle').value)*Math.PI/180,
-      spot: Number(el('spot').value)*1e-3,
+      alpha, cosAlpha, spot,
+      grazing: angle===90,
+      surfaceDiameter: angle===90 ? null : spot/cosAlpha,
       radius: Number(el('radius').value)*1e-3,
       slit: Number(el('slit').value)*1e-6,
       focal: Number(el('focal').value)*1e-3,
@@ -222,6 +188,14 @@
       order: Number(el('order').value),
       wavelengths: wavelengths()
     };
+  }
+
+  function projectFootprint(p, samples) {
+    return samples.map(([sx,sy])=>[p.radius+sx*p.surfaceDiameter,sy*p.spot])
+      .filter(([x,y])=>{
+        const radius=Math.hypot(x,y);
+        return radius>=DISC_HOLE_RADIUS && radius<=DISC_RADIUS;
+      });
   }
 
   function grooveNormal(model, x, y, p) {
@@ -257,7 +231,7 @@
 
   function doubleArrow(ctx,x1,y1,x2,y2,label,labelOffset=0) {
     const angle=Math.atan2(y2-y1,x2-x1), head=7;
-    ctx.strokeStyle='#7ec8ff'; ctx.fillStyle='#bfe5ff'; ctx.lineWidth=1.5;
+    ctx.strokeStyle='#ddd'; ctx.fillStyle='#ddd'; ctx.lineWidth=1.5;
     ctx.beginPath(); ctx.moveTo(x1,y1); ctx.lineTo(x2,y2); ctx.stroke();
     for(const [x,y,a] of [[x1,y1,angle],[x2,y2,angle+Math.PI]]) {
       ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x+head*Math.cos(a+0.55),y+head*Math.sin(a+0.55)); ctx.moveTo(x,y); ctx.lineTo(x+head*Math.cos(a-0.55),y+head*Math.sin(a-0.55)); ctx.stroke();
@@ -269,54 +243,63 @@
 
   function drawDiscTopView(ctx,p,left,w,h) {
     const panelWidth=w-left, cx=left+panelWidth*0.49, cy=h*0.51;
-    const discRadius=Math.min(panelWidth*0.34,h*0.32), metresToPx=discRadius/0.06;
-    const beamDiameter=p.spot, cosAlpha=Math.max(0.08,Math.cos(p.alpha));
-    const parallelDiameter=beamDiameter/cosAlpha, perpendicularDiameter=beamDiameter;
+    const discRadius=Math.min(panelWidth*0.34,h*0.32), metresToPx=discRadius/DISC_RADIUS;
+    const holeRadius=DISC_HOLE_RADIUS*metresToPx;
+    const parallelDiameter=p.surfaceDiameter, perpendicularDiameter=p.spot;
     const P={x:cx+p.radius*metresToPx,y:cy};
     const major=parallelDiameter*metresToPx, minor=perpendicularDiameter*metresToPx;
 
-    ctx.strokeStyle='rgba(144,162,186,.38)'; ctx.lineWidth=1;
+    ctx.strokeStyle='rgba(160,160,160,.38)'; ctx.lineWidth=1;
     ctx.beginPath(); ctx.moveTo(left,14); ctx.lineTo(left,h-14); ctx.stroke();
-    ctx.fillStyle='#dbe7f7'; ctx.font='15px system-ui'; ctx.textAlign='center';
-    ctx.fillText('光盘俯视：盘面上的实际光斑',left+panelWidth/2,24);
-    ctx.fillStyle='#91a2ba'; ctx.font='12px system-ui';
+    ctx.fillStyle='#eee'; ctx.font='15px system-ui'; ctx.textAlign='center';
+    ctx.fillText('光盘俯视',left+panelWidth/2,24);
+    ctx.fillStyle='#aaa'; ctx.font='12px system-ui';
     ctx.fillText('入射面 / 径向 →',left+panelWidth/2,44);
 
     // Disc and a few representative circular tracks. Track spacing is not to scale.
-    const discGradient=ctx.createRadialGradient(cx-22,cy-28,8,cx,cy,discRadius);
-    discGradient.addColorStop(0,'#26354a'); discGradient.addColorStop(.72,'#172434'); discGradient.addColorStop(1,'#101925');
-    ctx.fillStyle=discGradient; ctx.beginPath(); ctx.arc(cx,cy,discRadius,0,Math.PI*2); ctx.fill();
-    ctx.strokeStyle='#7890ae'; ctx.lineWidth=2; ctx.stroke();
-    ctx.strokeStyle='rgba(126,200,255,.24)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.arc(cx,cy,discRadius,0,Math.PI*2);
+    ctx.strokeStyle='#999'; ctx.lineWidth=2; ctx.stroke();
+    ctx.strokeStyle='rgba(220,220,220,.24)'; ctx.lineWidth=1;
     for(let r=24;r<discRadius-5;r+=13) { ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2); ctx.stroke(); }
-    ctx.fillStyle='#080c12'; ctx.beginPath(); ctx.arc(cx,cy,16,0,Math.PI*2); ctx.fill();
-    ctx.strokeStyle='#7890ae'; ctx.stroke();
-    ctx.fillStyle='#dbe7f7'; ctx.beginPath(); ctx.arc(cx,cy,3.5,0,Math.PI*2); ctx.fill();
-    ctx.fillStyle='#b9c5d6'; ctx.font='12px system-ui'; ctx.textAlign='right'; ctx.fillText('O',cx-8,cy-8);
+    ctx.fillStyle='#000'; ctx.beginPath(); ctx.arc(cx,cy,holeRadius,0,Math.PI*2); ctx.fill();
+    ctx.strokeStyle='#999'; ctx.stroke();
+    ctx.fillStyle='#eee'; ctx.beginPath(); ctx.arc(cx,cy,3.5,0,Math.PI*2); ctx.fill();
+    ctx.fillStyle='#bbb'; ctx.font='12px system-ui'; ctx.textAlign='right'; ctx.fillText('O',cx-8,cy-8);
+    if(p.grazing) return;
 
     // A circular collimated beam projects to an ellipse on the tilted disc.
     ctx.save();
+    ctx.beginPath();
+    ctx.arc(cx,cy,discRadius,0,Math.PI*2);
+    ctx.moveTo(cx+holeRadius,cy);
+    ctx.arc(cx,cy,holeRadius,0,Math.PI*2);
+    ctx.clip('evenodd');
+    ctx.save();
     ctx.translate(P.x,P.y); ctx.scale(Math.max(major/2,1),Math.max(minor/2,1));
     const spotGradient=ctx.createRadialGradient(0,0,0,0,0,1);
-    spotGradient.addColorStop(0,'rgba(216,243,255,.92)');
-    spotGradient.addColorStop(.52,'rgba(126,200,255,.62)');
-    spotGradient.addColorStop(1,'rgba(126,200,255,.05)');
+    spotGradient.addColorStop(0,'rgba(245,245,245,.92)');
+    spotGradient.addColorStop(.52,'rgba(220,220,220,.62)');
+    spotGradient.addColorStop(1,'rgba(220,220,220,.05)');
     ctx.fillStyle=spotGradient; ctx.beginPath(); ctx.arc(0,0,1,0,Math.PI*2); ctx.fill();
     ctx.restore();
-    ctx.strokeStyle='#9fd9ff'; ctx.lineWidth=2; ctx.beginPath(); ctx.ellipse(P.x,P.y,Math.max(major/2,1),Math.max(minor/2,1),0,0,Math.PI*2); ctx.stroke();
-    ctx.fillStyle='#e9eef7'; ctx.beginPath(); ctx.arc(P.x,P.y,3.5,0,Math.PI*2); ctx.fill();
+    ctx.strokeStyle='#ddd'; ctx.lineWidth=2; ctx.beginPath(); ctx.ellipse(P.x,P.y,Math.max(major/2,1),Math.max(minor/2,1),0,0,Math.PI*2); ctx.stroke();
+    ctx.restore();
+    ctx.fillStyle='#eee'; ctx.beginPath(); ctx.arc(P.x,P.y,3.5,0,Math.PI*2); ctx.fill();
     ctx.font='12px system-ui'; ctx.textAlign='left'; ctx.fillText('P',P.x+6,P.y-6);
 
     // Dimension arrows and values. At large alpha the ellipse can visibly extend beyond the disc.
     const majorHalf=Math.max(major/2,5), minorHalf=Math.max(minor/2,4);
-    doubleArrow(ctx,P.x-majorHalf,P.y-13-minorHalf,P.x+majorHalf,P.y-13-minorHalf,'D∥',-7);
-    doubleArrow(ctx,P.x-majorHalf-10,P.y-minorHalf,P.x-majorHalf-10,P.y+minorHalf,'D⊥',-8);
+    if(P.x-majorHalf>left+20 && P.x+majorHalf<w-15) {
+      doubleArrow(ctx,P.x-majorHalf,P.y-13-minorHalf,P.x+majorHalf,P.y-13-minorHalf,'D∥',-7);
+    }
+    const widthArrowX=Math.max(left+20,P.x-majorHalf-10);
+    doubleArrow(ctx,widthArrowX,P.y-minorHalf,widthArrowX,P.y+minorHalf,'D⊥',-8);
     const rArrowY=cy+discRadius+15;
-    ctx.save(); ctx.setLineDash([4,4]); ctx.strokeStyle='rgba(185,197,214,.42)';
+    ctx.save(); ctx.setLineDash([4,4]); ctx.strokeStyle='rgba(195,195,195,.42)';
     ctx.beginPath(); ctx.moveTo(cx,cy); ctx.lineTo(cx,rArrowY); ctx.moveTo(P.x,P.y); ctx.lineTo(P.x,rArrowY); ctx.stroke(); ctx.restore();
     doubleArrow(ctx,cx,rArrowY,P.x,rArrowY,`R = ${(p.radius*1e3).toFixed(0)} mm`,-8);
 
-    ctx.font='12px system-ui'; ctx.textAlign='left'; ctx.fillStyle='#bfe5ff';
+    ctx.font='12px system-ui'; ctx.textAlign='left'; ctx.fillStyle='#ddd';
     ctx.fillText(`D∥ = B/cosα = ${(parallelDiameter*1e3).toFixed(1)} mm`,left+12,h-27);
     ctx.fillText(`D⊥ = B = ${(perpendicularDiameter*1e3).toFixed(1)} mm`,left+12,h-10);
   }
@@ -325,54 +308,65 @@
     const canvas=el('side'), ctx=canvas.getContext('2d');
     const w=canvas.width, h=canvas.height;
     ctx.clearRect(0,0,w,h);
-    const bg=ctx.createLinearGradient(0,0,0,h);
-    bg.addColorStop(0,'#0a1019'); bg.addColorStop(1,'#101925');
-    ctx.fillStyle=bg; ctx.fillRect(0,0,w,h);
+    ctx.fillStyle='#000'; ctx.fillRect(0,0,w,h);
 
     const topViewLeft=w*0.765, sideWidth=topViewLeft;
     const discY=h*0.72, O={x:sideWidth*0.34,y:discY};
     const radiusFraction=(p.radius-0.020)/0.038;
     const P={x:O.x+sideWidth*(0.13+0.13*radiusFraction),y:discY};
-    const Lin=Math.min(sideWidth*0.42,h*1.55), Lout=Math.min(sideWidth*0.31,h*1.05);
-    const source={x:P.x-Lin*Math.sin(p.alpha),y:P.y-Lin*Math.cos(p.alpha)};
+    if(p.grazing) {
+      ctx.strokeStyle='#aaa'; ctx.lineWidth=4;
+      ctx.beginPath(); ctx.moveTo(O.x-50,discY); ctx.lineTo(sideWidth-12,discY); ctx.stroke();
+      ctx.strokeStyle='#fff4c0'; ctx.lineWidth=2;
+      ctx.beginPath(); ctx.moveTo(40,discY-24); ctx.lineTo(P.x,discY-24);
+      ctx.lineTo(P.x-10,discY-29); ctx.moveTo(P.x,discY-24); ctx.lineTo(P.x-10,discY-19); ctx.stroke();
+      ctx.fillStyle='#ddd'; ctx.font='15px system-ui'; ctx.textAlign='left';
+      ctx.fillText('α = 90° · 掠入射',40,discY-39);
+      drawDiscTopView(ctx,p,topViewLeft,w,h);
+      el('rayReadout').textContent='入射角 90° · 光束平行于盘面';
+      return;
+    }
+    const Lin=Math.min(sideWidth*0.42,h*1.55,(discY-36)/p.cosAlpha);
+    const Lout=Math.min(sideWidth*0.31,discY-42);
+    const source={x:P.x-Lin*Math.sin(p.alpha),y:P.y-Lin*p.cosAlpha};
     const point=(a,b,t)=>({x:a.x+(b.x-a.x)*t,y:a.y+(b.y-a.y)*t});
     const slit=point(source,P,0.30), lens=point(source,P,0.52);
-    const ux=(P.x-source.x)/Lin, uy=(P.y-source.y)/Lin;
+    const ux=Math.sin(p.alpha), uy=p.cosAlpha;
     const px=-uy, py=ux;
 
     // Disc and illuminated footprint.
-    ctx.strokeStyle='#7890ae'; ctx.lineWidth=5; ctx.beginPath(); ctx.moveTo(O.x-50,P.y); ctx.lineTo(sideWidth-12,P.y); ctx.stroke();
-    ctx.fillStyle='#dbe7f7'; ctx.beginPath(); ctx.arc(O.x,O.y,5,0,Math.PI*2); ctx.fill();
+    ctx.strokeStyle='#999'; ctx.lineWidth=5; ctx.beginPath(); ctx.moveTo(O.x-50,P.y); ctx.lineTo(sideWidth-12,P.y); ctx.stroke();
+    ctx.fillStyle='#eee'; ctx.beginPath(); ctx.arc(O.x,O.y,5,0,Math.PI*2); ctx.fill();
     ctx.font='13px system-ui'; ctx.textAlign='center'; ctx.fillText('光盘圆心 O',O.x,O.y+23);
-    const surfaceDiameter=p.spot/Math.max(0.08,Math.cos(p.alpha));
+    const surfaceDiameter=p.surfaceDiameter;
     const spotPx=Math.max(10,Math.min(155,surfaceDiameter/0.050*155));
-    const beamHalfPx=0.5*spotPx*Math.max(0.08,Math.cos(p.alpha));
+    const beamHalfPx=0.5*spotPx*p.cosAlpha;
     const glow=ctx.createLinearGradient(P.x-spotPx/2,0,P.x+spotPx/2,0);
-    glow.addColorStop(0,'rgba(126,200,255,0)'); glow.addColorStop(.5,'rgba(126,200,255,.95)'); glow.addColorStop(1,'rgba(126,200,255,0)');
+    glow.addColorStop(0,'rgba(220,220,220,0)'); glow.addColorStop(.5,'rgba(220,220,220,.95)'); glow.addColorStop(1,'rgba(220,220,220,0)');
     ctx.strokeStyle=glow; ctx.lineWidth=9; ctx.beginPath(); ctx.moveTo(P.x-spotPx/2,P.y-1); ctx.lineTo(P.x+spotPx/2,P.y-1); ctx.stroke();
-    ctx.fillStyle='#b9c5d6'; ctx.font='15px system-ui'; ctx.textAlign='center'; ctx.fillText('光斑中心 P',P.x,P.y+23);
+    ctx.fillStyle='#bbb'; ctx.font='15px system-ui'; ctx.textAlign='center'; ctx.fillText('光斑中心 P',P.x,P.y+23);
     doubleArrow(ctx,O.x,P.y+45,P.x,P.y+45,`R = ${(p.radius*1e3).toFixed(0)} mm`,-10);
     doubleArrow(ctx,P.x-spotPx/2,P.y-15,P.x+spotPx/2,P.y-15,`D∥ = ${(surfaceDiameter*1e3).toFixed(1)} mm`,-9);
 
     // Magnified in-plane track-spacing inset. The micrometre pitch cannot be drawn to scale.
     const insetX=sideWidth-132, insetY=P.y-55, pitchPx=25;
-    ctx.fillStyle='#91a2ba'; ctx.font='12px system-ui'; ctx.textAlign='center'; ctx.fillText('盘面轨道局部放大',insetX+38,insetY-26);
-    ctx.strokeStyle='rgba(126,200,255,.72)'; ctx.lineWidth=2;
+    ctx.fillStyle='#aaa'; ctx.font='12px system-ui'; ctx.textAlign='center'; ctx.fillText('盘面轨道局部放大',insetX+38,insetY-26);
+    ctx.strokeStyle='rgba(220,220,220,.72)'; ctx.lineWidth=2;
     for(let i=0;i<4;i++) { ctx.beginPath(); ctx.moveTo(insetX+i*pitchPx,insetY-16); ctx.lineTo(insetX+i*pitchPx,insetY+16); ctx.stroke(); }
     doubleArrow(ctx,insetX,insetY+25,insetX+pitchPx,insetY+25,`d = ${(p.d*1e6).toFixed(2)} μm`,13);
 
     // Normal.
-    ctx.save(); ctx.setLineDash([8,7]); ctx.strokeStyle='rgba(205,218,237,.65)'; ctx.lineWidth=2;
+    ctx.save(); ctx.setLineDash([8,7]); ctx.strokeStyle='rgba(220,220,220,.65)'; ctx.lineWidth=2;
     ctx.beginPath(); ctx.moveTo(P.x,P.y+8); ctx.lineTo(P.x,P.y-Lout-36); ctx.stroke(); ctx.restore();
-    ctx.fillStyle='#aebbd0'; ctx.fillText('法线',P.x+28,P.y-Lout-23);
+    ctx.fillStyle='#bbb'; ctx.fillText('法线',P.x+28,P.y-Lout-23);
 
     // Source.
     const halo=ctx.createRadialGradient(source.x,source.y,2,source.x,source.y,28);
     halo.addColorStop(0,'#fff'); halo.addColorStop(.25,'#ffe47a'); halo.addColorStop(1,'rgba(255,212,72,0)');
     ctx.fillStyle=halo; ctx.beginPath(); ctx.arc(source.x,source.y,28,0,Math.PI*2); ctx.fill();
     ctx.fillStyle='#ffe87c'; ctx.beginPath(); ctx.arc(source.x,source.y,8,0,Math.PI*2); ctx.fill();
-    const activeSource=sourceMeta[el('source').value] || sourceMeta.white;
-    ctx.textAlign='left'; ctx.fillStyle='#e9eef7'; ctx.fillText(activeSource.label,source.x+18,source.y-12);
+    const sourceLabel=el('source').selectedOptions[0].textContent.split(' · ')[0];
+    ctx.textAlign='left'; ctx.fillStyle='#eee'; ctx.fillText(sourceLabel,source.x+18,source.y-12);
 
     // Incident light, slit and collimator.
     ctx.strokeStyle='rgba(255,247,210,.92)'; ctx.lineWidth=3;
@@ -384,39 +378,39 @@
       ctx.strokeStyle='rgba(255,247,210,.25)'; ctx.lineWidth=1.5;
       ctx.beginPath(); ctx.moveTo(start.x,start.y); ctx.lineTo(end.x,end.y); ctx.stroke();
     }
-    ctx.strokeStyle='#d7e2f2'; ctx.lineWidth=4;
+    ctx.strokeStyle='#ddd'; ctx.lineWidth=4;
     ctx.beginPath(); ctx.moveTo(slit.x+px*15,slit.y+py*15); ctx.lineTo(slit.x+px*4,slit.y+py*4); ctx.moveTo(slit.x-px*4,slit.y-py*4); ctx.lineTo(slit.x-px*15,slit.y-py*15); ctx.stroke();
     doubleArrow(ctx,slit.x+px*4,slit.y+py*4,slit.x-px*4,slit.y-py*4,`a = ${(p.slit*1e6).toFixed(0)} μm（放大）`,20);
-    ctx.strokeStyle='#7ec8ff'; ctx.lineWidth=3;
+    ctx.strokeStyle='#ddd'; ctx.lineWidth=3;
     ctx.beginPath(); ctx.moveTo(lens.x+px*24,lens.y+py*24); ctx.quadraticCurveTo(lens.x+ux*8,lens.y+uy*8,lens.x-px*24,lens.y-py*24); ctx.stroke();
     doubleArrow(ctx,lens.x+px*beamHalfPx,lens.y+py*beamHalfPx,lens.x-px*beamHalfPx,lens.y-py*beamHalfPx,`B = ${(p.spot*1e3).toFixed(1)} mm`,28);
-    ctx.fillStyle='#cbd6e6'; ctx.font='14px system-ui'; ctx.textAlign='center';
+    ctx.fillStyle='#ccc'; ctx.font='14px system-ui'; ctx.textAlign='center';
     ctx.fillText('狭缝',slit.x+px*30,slit.y+py*30); ctx.fillText('准直镜',lens.x+px*36,lens.y+py*36);
 
     // Incident angular spread around the chief ray; tiny values are enlarged for visibility.
     const backAngle=Math.atan2(lens.y-P.y,lens.x-P.x), fanLength=Math.hypot(P.x-lens.x,P.y-lens.y);
     const displayDivergence=p.divergence===0 ? 0 : Math.max(p.divergence,0.6*Math.PI/180);
     if(displayDivergence>0) {
-      ctx.strokeStyle='rgba(126,200,255,.55)'; ctx.lineWidth=1.5;
+      ctx.strokeStyle='rgba(220,220,220,.55)'; ctx.lineWidth=1.5;
       for(const sign of [-1,1]) {
         const a=backAngle+sign*displayDivergence/2;
         ctx.beginPath(); ctx.moveTo(P.x,P.y); ctx.lineTo(P.x+fanLength*Math.cos(a),P.y+fanLength*Math.sin(a)); ctx.stroke();
       }
       ctx.beginPath(); ctx.arc(P.x,P.y,78,backAngle-displayDivergence/2,backAngle+displayDivergence/2); ctx.stroke();
     }
-    ctx.fillStyle='#9fd9ff'; ctx.font='13px system-ui'; ctx.textAlign='left';
-    ctx.fillText(`Δα = ${(p.divergence*180/Math.PI).toFixed(2)}°（1σ）${p.divergence>0&&p.divergence<0.6*Math.PI/180?'，示意放大':''}`,lens.x+18,lens.y-23);
+    ctx.fillStyle='#ddd'; ctx.font='13px system-ui'; ctx.textAlign='left';
+    ctx.fillText(`Δα = ${(p.divergence*180/Math.PI).toFixed(2)}°（1σ）`,lens.x+18,lens.y-23);
 
     // Angle of incidence.
-    ctx.strokeStyle='#8ba0bc'; ctx.lineWidth=1.5; ctx.beginPath(); ctx.arc(P.x,P.y,46,-Math.PI/2-p.alpha,-Math.PI/2); ctx.stroke();
+    ctx.strokeStyle='#aaa'; ctx.lineWidth=1.5; ctx.beginPath(); ctx.arc(P.x,P.y,46,-Math.PI/2-p.alpha,-Math.PI/2); ctx.stroke();
     const amid=-Math.PI/2-p.alpha/2;
-    ctx.fillStyle='#b9c5d6'; ctx.fillText(`α = ${(p.alpha*180/Math.PI).toFixed(0)}°`,P.x+62*Math.cos(amid),P.y+62*Math.sin(amid));
+    ctx.fillStyle='#bbb'; ctx.fillText(`α = ${(p.alpha*180/Math.PI).toFixed(0)}°`,P.x+62*Math.cos(amid),P.y+62*Math.sin(amid));
 
     // Specular zero order.
     const spec={x:P.x+Lout*Math.sin(p.alpha),y:P.y-Lout*Math.cos(p.alpha)};
-    ctx.save(); ctx.setLineDash([7,7]); ctx.strokeStyle='rgba(205,218,237,.42)'; ctx.lineWidth=2;
+    ctx.save(); ctx.setLineDash([7,7]); ctx.strokeStyle='rgba(220,220,220,.42)'; ctx.lineWidth=2;
     ctx.beginPath(); ctx.moveTo(P.x,P.y); ctx.lineTo(spec.x,spec.y); ctx.stroke(); ctx.restore();
-    ctx.fillStyle='#9eabc0'; ctx.textAlign='left'; ctx.fillText('0 级（镜面反射）',spec.x+8,spec.y);
+    ctx.fillStyle='#aaa'; ctx.textAlign='left'; ctx.fillText('0 级（镜面反射）',spec.x+8,spec.y);
 
     // Diffracted fan and an angular detector arc.
     const samples=rayDiagramWavelengths(p), rays=[];
@@ -431,9 +425,9 @@
     }
     if(rays.length) {
       const angles=rays.map(r=>-Math.PI/2+r.beta);
-      ctx.strokeStyle='rgba(126,200,255,.45)'; ctx.lineWidth=5;
+      ctx.strokeStyle='rgba(220,220,220,.45)'; ctx.lineWidth=5;
       ctx.beginPath(); ctx.arc(P.x,P.y,Lout,Math.min(...angles)-0.05,Math.max(...angles)+0.05); ctx.stroke();
-      ctx.fillStyle='#dbe7f7'; ctx.textAlign='center';
+      ctx.fillStyle='#eee'; ctx.textAlign='center';
       const center=rays[Math.floor(rays.length/2)].end;
       ctx.fillText('探测屏 / 相机',center.x,Math.max(19,center.y-20));
       const labelIndices=new Set([0,Math.floor((rays.length-1)/3),Math.floor(2*(rays.length-1)/3),rays.length-1]);
@@ -444,16 +438,16 @@
         ctx.fillText(`${r.nm.toFixed(rays.length<=2?1:0)} nm`,r.end.x,r.end.y-9);
       }
       const referenceRay=rays[Math.floor(rays.length/2)], beta=referenceRay.beta;
-      ctx.strokeStyle='#7ec8ff'; ctx.lineWidth=1.5; ctx.beginPath();
+      ctx.strokeStyle='#ddd'; ctx.lineWidth=1.5; ctx.beginPath();
       ctx.arc(P.x,P.y,58,Math.min(-Math.PI/2,-Math.PI/2+beta),Math.max(-Math.PI/2,-Math.PI/2+beta)); ctx.stroke();
       const betaMid=-Math.PI/2+beta/2;
-      ctx.fillStyle='#bfe5ff'; ctx.fillText(`β = ${(beta*180/Math.PI).toFixed(1)}°`,P.x+78*Math.cos(betaMid),P.y+78*Math.sin(betaMid));
+      ctx.fillStyle='#ddd'; ctx.fillText(`β = ${(beta*180/Math.PI).toFixed(1)}°`,P.x+78*Math.cos(betaMid),P.y+78*Math.sin(betaMid));
     } else {
       ctx.fillStyle='#ffb36b'; ctx.textAlign='center'; ctx.fillText('当前条件下此级次不能传播',P.x,P.y-95);
     }
     drawDiscTopView(ctx,p,topViewLeft,w,h);
     const betaText=rays.length ? `${(Math.min(...rays.map(r=>r.beta))*180/Math.PI).toFixed(1)}° ～ ${(Math.max(...rays.map(r=>r.beta))*180/Math.PI).toFixed(1)}°` : '无';
-    el('rayReadout').innerHTML=`<span>入射角 <b>${(p.alpha*180/Math.PI).toFixed(0)}°</b></span><span>一级反射角范围 <b>${betaText}</b></span><span>轨距 <b>${(p.d*1e6).toFixed(2)} μm</b></span><span>准直光束 B <b>${(p.spot*1e3).toFixed(1)} mm</b></span><span>盘面椭圆光斑 <b>${(surfaceDiameter*1e3).toFixed(1)} × ${(p.spot*1e3).toFixed(1)} mm</b></span><span class="source-info"><b>${activeSource.label}</b>：${activeSource.description}　谱线相对强度仅用于视觉比较。</span>`;
+    el('rayReadout').innerHTML=`<span>入射角 <b>${(p.alpha*180/Math.PI).toFixed(0)}°</b></span><span>一级反射角范围 <b>${betaText}</b></span><span>轨距 <b>${(p.d*1e6).toFixed(2)} μm</b></span><span>准直光束 B <b>${(p.spot*1e3).toFixed(1)} mm</b></span><span>椭圆投影 <b>${(surfaceDiameter*1e3).toFixed(1)} × ${(p.spot*1e3).toFixed(1)} mm</b></span>`;
   }
 
   function bilinearSplat(buffers, x, y, value, rgb) {
@@ -506,7 +500,7 @@
     return result;
   }
 
-  function calculate(p, model, xmin, xmax, ymin, ymax) {
+  function calculate(p, points, model, xmin, xmax, ymin, ymax) {
     const buffers={
       intensity:new Float32Array(W*H), red:new Float32Array(W*H),
       green:new Float32Array(W*H), blue:new Float32Array(W*H)
@@ -515,14 +509,13 @@
     const pxPerRadX=(plot.right-plot.left)/(xmax-xmin);
     const pxPerRadY=(plot.bottom-plot.top)/(ymax-ymin);
     let acceptedCount=0;
-    const surfaceDiameterParallel=p.spot/Math.max(0.08,Math.cos(p.alpha));
     for(const wl of p.wavelengths) {
       const displayRGB=spectralRGB(wl.nm);
       // Mix wavelengths in approximate linear-light RGB, then apply display gamma once.
       const linearRGB=displayRGB.map(channel=>Math.pow(channel,2.2));
       const value=wl.weight/SPATIAL_SAMPLES;
-      for(const [sx,sy] of diskSamples) {
-        const dir=outputDirection(model,p.radius+sx*surfaceDiameterParallel,sy*p.spot,wl.nm,p);
+      for(const [x,y] of points) {
+        const dir=outputDirection(model,x,y,wl.nm,p);
         if(!dir) continue;
         const px=plot.left+(dir[0]-xmin)*pxPerRadX;
         const py=plot.bottom-(dir[1]-ymin)*pxPerRadY;
@@ -545,23 +538,23 @@
   }
 
   function drawAxes(ctx, xmin,xmax,ymin,ymax) {
-    ctx.strokeStyle='rgba(190,205,225,.18)'; ctx.lineWidth=1;
+    ctx.strokeStyle='rgba(205,205,205,.18)'; ctx.lineWidth=1;
     ctx.beginPath(); ctx.moveTo(42,10); ctx.lineTo(42,H-28); ctx.lineTo(W-8,H-28); ctx.stroke();
-    ctx.fillStyle='#98a6ba'; ctx.font='11px system-ui'; ctx.textAlign='center';
+    ctx.fillStyle='#aaa'; ctx.font='11px system-ui'; ctx.textAlign='center';
     for(let i=0;i<=4;i++) {
       const x=42+(W-52)*i/4, val=xmin+(xmax-xmin)*i/4;
       ctx.fillText((val*180/Math.PI).toFixed(1)+'°',x,H-10);
       const y=10+(H-38)*i/4, vy=ymax-(ymax-ymin)*i/4;
       ctx.textAlign='right'; ctx.fillText((vy*180/Math.PI).toFixed(1)+'°',37,y+4); ctx.textAlign='center';
-      ctx.strokeStyle='rgba(190,205,225,.08)'; ctx.beginPath(); ctx.moveTo(42,y); ctx.lineTo(W-8,y); ctx.stroke();
+      ctx.strokeStyle='rgba(205,205,205,.08)'; ctx.beginPath(); ctx.moveTo(42,y); ctx.lineTo(W-8,y); ctx.stroke();
     }
-    ctx.fillStyle='#aebbd0'; ctx.fillText('色散方向角 βₓ',W/2,H-1);
+    ctx.fillStyle='#bbb'; ctx.fillText('色散方向角 βₓ',W/2,H-1);
     ctx.save(); ctx.translate(12,H/2); ctx.rotate(-Math.PI/2); ctx.fillText('垂直方向角 βᵧ',0,0); ctx.restore();
   }
 
   function renderPanel(model, result, bounds) {
     const canvas=el('c'+model), ctx=canvas.getContext('2d');
-    ctx.clearRect(0,0,W,H); ctx.fillStyle='#080c12'; ctx.fillRect(0,0,W,H);
+    ctx.clearRect(0,0,W,H); ctx.fillStyle='#000'; ctx.fillRect(0,0,W,H);
     const img=ctx.createImageData(W,H);
     let maxLuminance=0;
     for(let i=0;i<W*H;i++) {
@@ -574,9 +567,9 @@
       const rr=Math.pow(1-Math.exp(-result.red[i]*exposure),1/2.2);
       const gg=Math.pow(1-Math.exp(-result.green[i]*exposure),1/2.2);
       const bb=Math.pow(1-Math.exp(-result.blue[i]*exposure),1/2.2);
-      img.data[k]=7+Math.round(248*rr);
-      img.data[k+1]=10+Math.round(245*gg);
-      img.data[k+2]=16+Math.round(239*bb);
+      img.data[k]=Math.round(255*rr);
+      img.data[k+1]=Math.round(255*gg);
+      img.data[k+2]=Math.round(255*bb);
       img.data[k+3]=255;
     }
     ctx.putImageData(img,0,0);
@@ -611,28 +604,29 @@
     drawRayDiagram(p);
 
     const all=[];
-    const footprint=[[0,0]];
-    const surfaceDiameterParallel=p.spot/Math.max(0.08,Math.cos(p.alpha));
-    for(let i=0;i<96;i++) {
+    const points=p.grazing ? [] : projectFootprint(p,diskSamples);
+    const perimeter=Array.from({length:96},(_,i)=>{
       const theta=2*Math.PI*i/96;
-      footprint.push([0.5*surfaceDiameterParallel*Math.cos(theta),0.5*p.spot*Math.sin(theta)]);
-    }
+      return [0.5*Math.cos(theta),0.5*Math.sin(theta)];
+    });
+    const footprint=p.grazing ? [] : [...points,...projectFootprint(p,[[0,0],...perimeter])];
     const boundWavelengths=[p.wavelengths[0],p.wavelengths[p.wavelengths.length-1]];
     for(let model=0;model<3;model++) {
-      for(const [dx,dy] of footprint) {
+      for(const [x,y] of footprint) {
         for(const wl of boundWavelengths) {
-          const dir=outputDirection(model,p.radius+dx,dy,wl.nm,p);
+          const dir=outputDirection(model,x,y,wl.nm,p);
           if(dir) all.push(dir);
         }
       }
     }
     if(!all.length) {
+      const message=p.grazing ? '掠入射 · 无盘面光斑' : '所选级次无法传播';
       for(let model=0;model<3;model++) {
-        const ctx=el('c'+model).getContext('2d'); ctx.clearRect(0,0,W,H); ctx.fillStyle='#080c12'; ctx.fillRect(0,0,W,H);
-        ctx.fillStyle='#ffb36b'; ctx.font='14px system-ui'; ctx.textAlign='center'; ctx.fillText('当前条件下，所选衍射级次不能传播',W/2,H/2);
-        el('m'+model).innerHTML=metricHTML('有效光线','无')+metricHTML('当前结果','无可传播级次')+metricHTML('线宽','—')+metricHTML('提示','调整入射角 / 级次');
+        const ctx=el('c'+model).getContext('2d'); ctx.clearRect(0,0,W,H); ctx.fillStyle='#000'; ctx.fillRect(0,0,W,H);
+        ctx.fillStyle='#ddd'; ctx.font='14px system-ui'; ctx.textAlign='center'; ctx.fillText(message,W/2,H/2);
+        el('m'+model).replaceChildren();
       }
-      el('status').textContent='几何光栅方程没有给出可传播的出射方向。'; return;
+      return;
     }
     let xmin=Math.min(...all.map(a=>a[0])), xmax=Math.max(...all.map(a=>a[0]));
     let ymin=Math.min(...all.map(a=>a[1])), ymax=Math.max(...all.map(a=>a[1]));
@@ -646,20 +640,16 @@
     if(ymax-ymin<spanY) { const c=(ymax+ymin)/2; ymin=c-spanY/2; ymax=c+spanY/2; }
     xmin-=padX; xmax+=padX; ymin-=padY; ymax+=padY;
     const bounds=[xmin,xmax,ymin,ymax];
-    const results=[];
     for(let model=0;model<3;model++) {
-      const result=calculate(p,model,xmin,xmax,ymin,ymax);
-      renderPanel(model,result,bounds); results.push(result);
+      const result=calculate(p,points,model,xmin,xmax,ymin,ymax);
+      renderPanel(model,result,bounds);
       const valid=result.acceptedCount;
       const width=fwhmProfile(result,bounds);
-      const geometry=model===0?'无曲率基准':model===1?'环形弯曲':'螺线局部法线';
       const isContinuum=p.wavelengths.length>20;
       const widthLabel=isContinuum ? '光源模式' : '中心截面 FWHM';
       const widthValue=isContinuum ? '连续谱积分' : (width===null?'—':width.toFixed(3)+'°');
-      el('m'+model).innerHTML=metricHTML('积分光线数',valid.toLocaleString())+metricHTML('几何特征',geometry)+metricHTML(widthLabel,widthValue)+metricHTML('模型级次',`${p.order>0?'+':''}${p.order} 级`);
+      
     }
-    const spiralRatio=p.d/(2*Math.PI*p.radius);
-    el('status').textContent=`螺线相对同心圆的局部切向法线修正约 d/(2πR) = ${spiralRatio.toExponential(2)}；颜色为连续波长积分后的视觉模拟，绝对亮度尚未标定。`;
   }
 
   function schedule() { if(scheduled) return; scheduled=true; requestAnimationFrame(update); }
