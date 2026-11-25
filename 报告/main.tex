@@ -1,4 +1,4 @@
-﻿% 编译方式：在报告目录运行 xelatex main.tex（目录更新需编译两次）
+﻿% 编译方式：在报告目录运行 xelatex -synctex=1 main.tex（目录更新需编译两次）
 \documentclass[UTF8,a4paper,12pt]{ctexart}
 \usepackage[margin=2.5cm]{geometry}
 \usepackage{amsmath,amssymb}
@@ -23,6 +23,12 @@
   钱昵霜\quad 2552531\quad 应用物理学\\
   骆欣畅\quad 2551633\quad 光电信息工程与应用物理学双学士学位
 \end{center}
+\begin{abstract}
+光盘表面的周期性数据轨道能够产生衍射，可用作低成本光谱仪的色散元件。本课题以 CD、DVD 和蓝光光盘为研究对象，分析光盘轨道结构与衍射光谱的关系，搭建了由狭缝、消色差透镜和光盘组成的光谱仪，利用手机拍摄光谱。实验中使用自制氖泡光源和实验室钠灯，观察不同光盘的分光现象，并比较狭缝宽度、光盘基板和拍摄条件对光谱图像的影响。结果表明，缩小狭缝能够减小谱线展宽，但同时会降低光通量；曝光过高会使谱峰饱和，曝光过低则难以记录较弱谱线。通过程序提取氖泡光谱的光强曲线并进行初步波长标定，对图像进行几何校正后，谱峰的半高全宽有所减小。此外，利用光盘轨道模拟分析了轨道曲率及记录点排列对衍射图样的影响。本研究验证了利用光盘搭建光谱仪并记录分立谱线的可行性，为进一步测量和优化仪器分辨能力提供了基础。
+
+\noindent\textbf{关键词：}光盘光谱仪；衍射光栅；光谱；波长标定；光谱分辨率
+\end{abstract}
+
 % 多位成员可逐行填写姓名、学号和学院／专业。
 \setcounter{tocdepth}{1}
 \tableofcontents
@@ -34,6 +40,11 @@ Data tracks on optical media (e.g. CDs / Blu-ray discs) behave as high-quality r
 光学存储介质（如 CD 或蓝光光盘）上的数据轨道可以作为反射式衍射光栅。当受到光照时，光盘能将光色散成其光谱成分。本课题要求利用数字光盘构建光谱仪，并优化其设计，以提高分辨本领、减小光学像差。
 
 本课题以光盘作为色散元件，研究光谱仪的光路结构。目前已进行了光盘色散现象的预实验和光学原理分析，并搭建了可用手机记录衍射光谱的装置；后续将研究轨距、照明区域、狭缝宽度及成像条件对分辨率的影响。
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.96\textwidth,height=0.82\textheight,keepaspectratio]{fig/总述导图1.png}
+\end{figure}
+
 
 
 \section{课题研究背景}
@@ -146,7 +157,7 @@ F--P 干涉仪的相邻透射峰之间具有有限的自由光谱范围。宽波
 
 钟卉提出了可调谐微型 F--P 干涉仪与微型曲面光栅光谱仪级联的设计，展示了干涉滤波和光栅色散的互补作用，说明联用确实可以兼顾高分辨率与宽光谱范围。
 
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
   \begin{minipage}[c]{0.55\textwidth}\centering
     \includegraphics[width=\linewidth]{fig/zhong_original_fp.png}\\
@@ -161,9 +172,11 @@ F--P 干涉仪的相邻透射峰之间具有有限的自由光谱范围。宽波
 \end{figure}
 \section{预实验现象}
 \subsection{预实验方法与现象}
+我们一开始发现入射光打在光盘中心时,能观察到完整的分立同心圆环, 所以准备采用的是半径拟合的方法.
+
 在预实验中，用光源照射 CD-R 和 DVD-R 光盘，并在光屏上观察衍射现象。图\ref{fig:preliminary}（a）、（b）分别为两种光盘的实验照片，光屏上出现了不同颜色的环状光带。遮挡光盘部分区域后，光屏上的彩色光带呈局部弧形，如图\ref{fig:preliminary}（c）所示。这些现象反映了光盘对不同波长的色散，以及盘面不同位置轨道方向对衍射光分布的影响。
 
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
   \begin{minipage}[c]{0.32\textwidth}\centering
     \includegraphics[width=\linewidth,height=4.2cm,keepaspectratio]{fig/pre_cd.jpg}\\
@@ -181,11 +194,77 @@ F--P 干涉仪的相邻透射峰之间具有有限的自由光谱范围。宽波
   \label{fig:preliminary}
 \end{figure}
 
+
+\subsubsection{蓝光光盘的观察范围}
+我们也同样测试了蓝光光盘(BD)的效果, 但很遗憾, 它对入射角度极其严苛,无法做到正入射
+
+蓝光光盘的不同观察方向呈现出不同颜色的光带，如图\ref{fig:bd-range-1122}所示：依次可以看到以蓝色为主、蓝绿共存、以绿色为主的区域；手电筒照明照片也显示出局部彩色光带。实验记录中，继续改变观察角度会受到装置空间限制。调整光盘角度和手机观察位置，可以选择接收到的波段；为了记录更宽范围的光谱，需要为衍射光和相机留出足够的角度空间。
+
+\begin{figure}[H]
+  \centering
+  \begin{minipage}[t]{0.28\textwidth}\centering
+    \includegraphics[width=\linewidth]{fig/exp_1122_bd_blue.jpg}\\
+    （a）蓝色区域
+  \end{minipage}\hspace{1em}
+  \begin{minipage}[t]{0.28\textwidth}\centering
+    \includegraphics[width=\linewidth]{fig/exp_1122_bd_blue_green.jpg}\\
+    （b）蓝绿区域
+  \end{minipage}
+
+  \smallskip
+  \begin{minipage}[t]{0.28\textwidth}\centering
+    \includegraphics[width=\linewidth]{fig/exp_1122_bd_green.jpg}\\
+    （c）绿色区域
+  \end{minipage}\hspace{1em}
+  \begin{minipage}[t]{0.28\textwidth}\centering
+    \includegraphics[width=\linewidth]{fig/exp_1122_bd_partial.jpg}\\
+    （d）总览
+  \end{minipage}
+  \caption{蓝光光盘在极其倾斜的角读下才能观察到色散现象}
+  \label{fig:bd-range-1122}
+\end{figure}
+
+
 预实验为后续选择照明区域和观察不同盘面位置的光谱形状提供了依据。
+
+
+\subsection{预处理: 环状光斑图像的径向分析}
+对已有的环状光斑照片，预处理记录给出了以光斑中心为参考的径向 RGB 通道数据。图\ref{fig:radial-analysis}（a）显示所用照片及径向位置标记，（b）为根据已有数据绘制的各通道数值随半径的变化。不同颜色通道的变化趋势不同，与照片中光带颜色随半径变化的现象相对应。
+
+\begin{figure}[H]
+  \centering
+  \begin{minipage}[c]{0.48\textwidth}\centering
+    \includegraphics[width=\linewidth]{fig/pre_radial_image.png}\\
+    （a）环状光斑及分析区域
+  \end{minipage}\hfill
+  \begin{minipage}[c]{0.49\textwidth}\centering
+    \includegraphics[width=\linewidth]{fig/pre_radial.pdf}\\
+    （b）径向 RGB 通道曲线
+  \end{minipage}
+  \caption{预实验光斑照片的径向分析。}
+  \label{fig:radial-analysis}
+\end{figure}
+
+从已有径向数据中选取三个位置，结果见表\ref{tab:rgb-profile}。例如，在半径 $149.5$ 像素处蓝色通道数值较高；在 $219.5$ 像素处，绿色通道数值相对升高。这与图中不同半径处的颜色变化相对应。
+
+\begin{table}[H]
+  \centering
+  \caption{环状光斑径向图像数据示例}
+  \label{tab:rgb-profile}
+  \begin{tabular}{cccc}
+    \toprule
+    半径（像素） & R & G & B \\
+    \midrule
+    149.5 & 0.3819 & 0.3912 & 0.5995 \\
+    219.5 & 0.4067 & 0.4637 & 0.5036 \\
+    249.5 & 0.4189 & 0.4328 & 0.4822 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
 
 我们还使用含氩小氖泡照射光盘，分别观察 CD 和 DVD 上的彩色光带，如图\ref{fig:neon-discs}所示。两张照片中都能看到红、黄和绿等颜色的弧形光带，可用于直观观察气体放电光源经过光盘后的色散现象。
 
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
   \begin{minipage}[c]{0.48\textwidth}\centering
     \includegraphics[width=\linewidth,height=6cm,keepaspectratio]{fig/pre_neon_cd.jpg}\\
@@ -199,9 +278,10 @@ F--P 干涉仪的相邻透射峰之间具有有限的自由光谱范围。宽波
   \label{fig:neon-discs}
 \end{figure}
 
-在器件制备方面，我们尝试将光盘浸入热水并剥离印刷层，也对 DVD 进行了分层处理；图\ref{fig:disc-preparation}记录了浸泡和分层后的状态。另用实验室氦氖激光器与透射式 CD 进行观察，见图\ref{fig:hene-cd}。
+\subsection{光盘拆解与结构验证}
+在器件制备方面，我们尝试将光盘浸入热水并剥离印刷层，也对 DVD 进行了分层处理；图\ref{fig:disc-preparation}记录了浸泡和分层后的状态。
 
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
   \begin{minipage}[c]{0.48\textwidth}\centering
     \includegraphics[width=\linewidth,height=5.5cm,keepaspectratio]{fig/pre_warm_disc.jpg}\\
@@ -214,8 +294,10 @@ F--P 干涉仪的相邻透射峰之间具有有限的自由光谱范围。宽波
   \caption{光盘处理过程。}
   \label{fig:disc-preparation}
 \end{figure}
+\subsection{制备透射光栅并测试}
+我们使用透明胶带对反射层进行了剥离,最后得到透明的透射光栅. 用实验室氦氖激光器与透射式 CD 进行观察，发现也能做到分光.见图\ref{fig:hene-cd}
 
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
   \includegraphics[width=0.44\textwidth,height=6.5cm,keepaspectratio]{fig/pre_hene_cd.jpg}
   \caption{实验室氦氖激光器与透射式 CD 的观察照片。}
@@ -223,31 +305,18 @@ F--P 干涉仪的相邻透射峰之间具有有限的自由光谱范围。宽波
 \end{figure}
 
 
-\subsection{光盘色散的数值模拟}
-为了分析光盘轨道形状对光谱的影响，我们编写了可在浏览器中运行的轻量化 HTML 模拟程序，界面如图\ref{fig:disc-simulation-interface}所示。程序以局部反射光栅关系计算衍射方向，并分别采用平行划线、同心圆划线和螺线划线描述光盘轨道；可以调整光盘轨距、入射角、照明位置、准直光束直径、狭缝宽度、光源和衍射级次，观察光路和探测器上的光谱变化。
+\subsection{仿真模拟}
+为了分析光盘轨道形状对光谱的影响，我们编写了可在浏览器中运行的轻量化 HTML 模拟程序，界面如图\ref{fig:disc-simulation-interface}所示。我们将程序上传到了服务器, 供查看(https://8.153.174.254/cd-spectrum/ )    .程序以局部反射光栅关系计算衍射方向，并分别采用平行划线、同心圆划线和螺线划线描述光盘轨道；可以调整光盘轨距、入射角、照明位置、准直光束直径、狭缝宽度、光源和衍射级次，观察光路和探测器上的光谱变化。
 
 图中以 DVD 轨距和氖灯光源为例：平行划线给出近似直线排列的谱线，而同心圆和螺线轨道产生弯曲的彩色谱线。这与我们用氖泡照射光盘时观察到的红、黄、绿光带及弧形分布在形态上较为吻合，说明轨道方向随盘面位置变化是产生弧形光带的重要原因。通过调节照明区域和入射角，还可以观察轨道曲率对光谱形状的影响，为后续选择盘面照明位置提供参考。
 
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
   \includegraphics[width=0.76\textwidth]{fig/disc_simulation_interface.png}
   \caption{光盘反射光栅模拟界面。}
   \label{fig:disc-simulation-interface}
 \end{figure}
 
-\subsection{记录点排列对衍射光谱的影响}
-光盘沿轨道分布着用于记录信息的微小结构。为了研究这些结构对光谱的影响，我们将局部光盘轨道展开为等间距直线，用相干叠加计算衍射光场，并比较连续槽、周期性重复的 $0101$ 和 $0100$ 坑台图案、轨道之间错开的 $0101$ 图案，以及随机长度的坑台排列。这里的 $0101$ 和 $0100$ 表示计算中构造的周期性坑台图案，分别用于观察不同排列带来的衍射变化。
-
-图\ref{fig:record-pattern-dvd}给出了 DVD 条件下的模拟结果：取轨距 $0.74\,\mu\mathrm{m}$、入射波长 $589\,\mathrm{nm}$、入射角 $65^\circ$，照明区域径向宽度为 $1.00\,\mathrm{mm}$，沿轨长度为 $0.25\,\mathrm{mm}$。图中间比较了各图案的归一化径向主峰，连续槽、周期图案和随机图案的曲线基本重合；在这一模型条件下，其等效半高全宽均约为 $0.386\,\mathrm{nm}$。当径向照明孔径减半时，主峰变宽，等效半高全宽约为 $0.773\,\mathrm{nm}$。因此，这组计算中主峰宽度主要受径向有效照明范围影响，沿轨记录点的断续排列对主峰宽度的影响较小。
-
-周期性记录点还会沿轨道方向产生额外的衍射副峰；记录点在相邻轨道间错开时，副峰的空间分布发生变化，随机排列则使部分能量分散到较宽范围。记录点排列因此会影响光谱附近的背景和弱信号辨认。上述宽度是给定条件下的模型计算结果，后续可通过实测谱线宽度和背景检验光盘结构的影响。
-
-\begin{figure}[htbp]
-  \centering
-  \includegraphics[width=0.85\textwidth]{fig/record_pattern_dvd.png}
-  \caption{不同记录点排列下的径向主峰与沿轨功率分布。}
-  \label{fig:record-pattern-dvd}
-\end{figure}
 
 \section{理论分析}
 \subsection{光栅衍射的物理机理}
@@ -256,7 +325,7 @@ F--P 干涉仪的相邻透射峰之间具有有限的自由光谱范围。宽波
 
 有人使用原子力显微镜观察金属层的表面形貌进行了测量，观察到周期性起伏，其所测DVD的周期约为 $740\,\mathrm{nm}$、峰谷高度差约为 $86\,\mathrm{nm}$。结果说明光盘轨道具有可供衍射利用的周期结构。\ref{fig:sun-dvd} \cite{sun2018dvd}。
 
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
   \begin{minipage}[c]{0.48\textwidth}\centering
     \includegraphics[width=\linewidth,height=6cm,keepaspectratio]{fig/sun2018_disc_structure.png}\\
@@ -270,7 +339,7 @@ F--P 干涉仪的相邻透射峰之间具有有限的自由光谱范围。宽波
   \label{fig:sun-dvd}
 \end{figure}
 
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
   \begin{minipage}[c]{0.49\textwidth}\centering
     \includegraphics[width=\linewidth]{fig/grating_geometry.pdf}\\
@@ -301,7 +370,7 @@ F--P 干涉仪的相邻透射峰之间具有有限的自由光谱范围。宽波
 \subsection{不同光盘的结构}
 光盘按存储密度可分为 CD、DVD 和蓝光光盘（Blu-ray Disc）等，它们的数据轨道间距不同。常见 CD 的轨距约为 $1600\,\mathrm{nm}$，DVD 约为 $740\,\mathrm{nm}$，蓝光光盘约为 $320\,\mathrm{nm}$\cite{sun2018dvd,sony2002bluray}。不同光盘的数据轨道和读取结构如图\ref{fig:disc-types-tracks}所示。光盘轨道可作为光栅刻线，轨距改变时，同一波长和衍射级次对应的衍射角也会改变，因此选用不同光盘需要调整观察方向和装置几何。
 
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
   \includegraphics[width=0.72\textwidth]{fig/disc_types_tracks.png}
   \caption{不同光盘的轨道与读取结构。}
@@ -310,7 +379,7 @@ F--P 干涉仪的相邻透射峰之间具有有限的自由光谱范围。宽波
 
 按数据写入方式，光盘又可分为只读、一次刻录和可重复擦写等类型。以 DVD 为例，DVD-ROM 在制造时压制出记录信息的凹坑和平台；DVD-R、DVD+R 可由刻录机写入一次，常见的记录层使用感光染料；DVD-RW、DVD+RW 则利用相变材料实现重复写入\cite{locopticalmedia}。DVD-ROM 与一次刻录型 DVD 的轨道结构示意见图\ref{fig:rom-recordable}。其中 $+$ 和 $-$ 表示不同的可刻录格式，其记录轨道和寻址方式有所区别。光盘中的基板、记录层和反射层会影响光到达轨道的方式及反射光的强度，在制作光盘光谱仪时可以选择从基板侧照射，或对光盘进行分层后观察。
 
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
   \includegraphics[width=0.55\textwidth]{fig/disc_rom_recordable.jpg}
   \caption{DVD-ROM 与一次刻录型 DVD 的轨道结构。}
@@ -319,7 +388,7 @@ F--P 干涉仪的相邻透射峰之间具有有限的自由光谱范围。宽波
 
 为了增加容量，光盘还可采用多层存储技术，即在同一读取面设置多个记录层，通过改变读取光束的焦点来读取不同层的信息；靠近读取面的一层需要允许部分光透过，以便读取更深的记录层。以 DVD 为例，DVD-5 为单面单层，DVD-9 为单面双层，DVD-10 为双面单层，DVD-18 为双面双层\cite{avid2005dvd}，其结构如图\ref{fig:dvd-layer-types}所示。多层结构会增加光在不同界面反射和透射的可能，制作光谱仪时需要结合实际盘片结构，观察不同照射方式下的光带和背景。
 
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
   \includegraphics[width=0.55\textwidth]{fig/dvd_layer_types.png}
   \caption{DVD 的单面、双面及多层结构。}
@@ -329,7 +398,7 @@ F--P 干涉仪的相邻透射峰之间具有有限的自由光谱范围。宽波
 \subsection{光盘轨道曲率的影响}
 光盘轨道由内向外呈螺旋排列，局部可以近似为一组圆弧。轨道的局部方向随照明位置改变，垂直于轨道的色散方向也随之转动。若一次照亮较大的盘面区域，不同位置产生的光谱会沿不同方向展开，叠加后可能形成弯曲的谱线或环状光带。
 
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
   \includegraphics[width=0.67\textwidth]{fig/track_curvature.pdf}
   \caption{光盘轨道与局部照明区域示意图。红色箭头表示不同位置的局部色散方向。}
@@ -351,7 +420,7 @@ F--P 干涉仪的相邻透射峰之间具有有限的自由光谱范围。宽波
 
 对实际仪器，单色光经过狭缝、光学系统和探测器后形成具有一定宽度的仪器线形。相邻两条谱线的观测曲线是各自线形的叠加：两线间隔一定时，线形越宽，重叠越明显，如图\ref{fig:line-overlap}所示。单条窄谱线的半高全宽可用于表征谱线展宽；评价能否分开两条谱线时，还需要给出分辨判据并考虑信噪比。
 
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
   \includegraphics[width=0.80\textwidth]{fig/line_overlap.pdf}
   \caption{相同间隔的两条谱线在不同展宽下的叠加示意。虚线表示各单线，实线表示其叠加；横坐标为相对波长。}
@@ -359,7 +428,7 @@ F--P 干涉仪的相邻透射峰之间具有有限的自由光谱范围。宽波
 \end{figure}
 
 \subsection{自由光谱范围与衍射级次重叠}
-光栅将不同波长的光按衍射角分开，但同一波长可以出现在多个衍射级次中。如图\ref{fig:grating-fsr}所示，每一个级次都形成一组光谱；当入射光的波长范围较宽时，相邻级次的光谱可能在同一方向重叠。此时，探测器在该方向接收到的光可能来自不同波长和不同级次，仅根据衍射角无法唯一确定波长。
+光栅将不同波长的光按衍射角分开，但同一波长可以出现在多个衍射级次中。如图\ref{fig:grating-fsr}所示，每一个级次都形成一组光谱；当入射光的波长范围较宽时，相邻级次的光谱可能在同一方向重叠。此时，探测器在该方向接收到的光可能来自不同波长和不同级次，仅根据衍射角无法唯一确定波长(此时又看到复色光了)
 
 \begin{figure}[H]
   \centering
@@ -380,8 +449,8 @@ F--P 干涉仪的相邻透射峰之间具有有限的自由光谱范围。宽波
 自由光谱范围描述的是避免相邻级次重叠所对应的波长间隔，它与分辨相近谱线的能力是两个不同的指标。实际仪器可通过限制入射波段或使用滤光片等方式抑制级次重叠。
 
 
-\subsection{后续光谱仪设计思路}
-考虑采用李特罗光路：狭缝位于准直透镜的前焦平面，光束经过透镜后照射光盘，选定波长附近的衍射光沿接近入射光的反方向返回，经同一透镜会聚到探测器所在的焦平面。设计波长 $\lambda_0$ 满足 $\alpha=\beta=\alpha_L$，由光栅方程得到
+\subsection{光谱仪设计思路}
+考虑光路：狭缝位于准直透镜的前焦平面，光束经过透镜后照射光盘，选定波长附近的衍射光沿接近入射光的反方向返回，经同一透镜会聚到探测器所在的焦平面。设计波长 $\lambda_0$ 满足 $\alpha=\beta=\alpha_L$，由光栅方程得到
 \begin{equation}
   \alpha_L=\arcsin\!\left(\frac{m\lambda_0}{2d}\right).
 \end{equation}
@@ -395,7 +464,7 @@ F--P 干涉仪的相邻透射峰之间具有有限的自由光谱范围。宽波
 \end{equation}
 实际数据处理中，先从已知波长谱线确定其像素位置，再拟合位置与波长的对应关系。若使用像素坐标 $p$，可在选定波段内拟合多项式 $\lambda(p)=a_0+a_1p+a_2p^2$；参考谱线数量和分布应满足拟合参数与检验的需要。
 
-
+\subsection{分辨率计算}
 设狭缝宽度为 $w$、准直透镜焦距为 $f$。在近轴和小角度条件下，狭缝宽度引入的入射角范围约为 $w/f$。对光栅方程在固定出射方向附近微分，可估算狭缝宽度对应的波长展宽：
 \begin{equation}
   \Delta\lambda_{\rm slit}\approx\frac{d\cos\alpha}{|m|}\frac{w}{f}.
@@ -409,39 +478,40 @@ F--P 干涉仪的相邻透射峰之间具有有限的自由光谱范围。宽波
 \end{equation}
 这一关系可用来估算相机对谱线的采样尺度。若以两个像素间距作为比较尺度，其对应的波长间隔约为 $2\Delta\lambda_{\rm pix}$；选择相机时还需结合实际谱线宽度、信噪比和探测器的有效尺寸。
 
-\subsection{后续光路优化思路}
+\subsection{光路优化思路}
 光谱仪的优化需要同时关注谱线宽度、光谱强度和谱线形状。结合前述光栅模型，可从表\ref{tab:optimization}中的几个方面调整光路；每次改变一个因素，记录谱线及相机设置，便于比较调整效果。
 
-\begin{table}[htbp]
+\begin{table}[H]
   \centering
   \caption{光谱仪的主要优化因素}
   \label{tab:optimization}
   \begin{tabular}{p{0.17\textwidth}p{0.42\textwidth}p{0.29\textwidth}}
     \toprule
-    调整因素 & 调整方向 & 观察指标 \\
+    可能的影响因素 & 调整方向 & 观察指标 \\
     \midrule
     狭缝宽度 & 逐步缩窄狭缝，兼顾通光量 & 谱线宽度、信号强度 \\
     盘面照明区域 & 选取局部区域，控制沿轨道切向的照明宽度 & 谱线弯曲、光强 \\
     准直与成像 & 调整狭缝、透镜和探测器位置，使谱线清晰成像 & 谱线宽度、清晰度 \\
     光盘与级次 & 比较不同光盘及可接收的衍射级次 & 光谱范围、谱线间距 \\
-    探测器设置 & 固定曝光和增益，避免谱线图像饱和 & 峰值形状、背景 \\
+    探测器设置 & 固定曝光和增益，避免谱线图像饱和, 相机是否有滤光片 & 峰值形状、背景 \\
     \bottomrule
   \end{tabular}
 \end{table}
+
 
 \section{实验装置}
 \subsection{光谱仪结构}
 我们搭建了以光盘为衍射光栅的光谱仪，装置由入射狭缝、消色差透镜、光盘及遮光结构组成，如图\ref{fig:apparatus-1122}所示。光源放置在狭缝一侧，透过狭缝的光经过透镜后照射到固定的光盘上；透镜用于准直入射光，光盘将不同波长的光沿不同方向衍射。装置一侧留有观察和拍摄空间，使用手机记录衍射光谱。通过调整光盘和手机的位置，可以观察所需方向的光谱。
 
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
   \begin{minipage}[t]{0.30\textwidth}\centering
-    \includegraphics[width=\linewidth]{fig/setup_top_1122.jpg}\\
+    \includegraphics[width=\linewidth]{fig/setup_top_1124.jpg}\\
     （a）装置俯视
   \end{minipage}\hfill
   \begin{minipage}[t]{0.30\textwidth}\centering
-    \includegraphics[width=\linewidth]{fig/setup_side_1122.jpg}\\
-    （b）装置侧视
+    \includegraphics[width=\linewidth]{fig/setup_window_1124.jpg}\\
+    （b）拍摄窗口视角
   \end{minipage}\hfill
   \begin{minipage}[t]{0.30\textwidth}\centering
     \includegraphics[width=\linewidth]{fig/setup_slit_1122.jpg}\\
@@ -452,61 +522,164 @@ F--P 干涉仪的相邻透射峰之间具有有限的自由光谱范围。宽波
   \begin{minipage}[t]{0.30\textwidth}\centering
     \includegraphics[width=\linewidth]{fig/setup_lens_1122.jpg}\\
     （d）消色差透镜
+  \end{minipage}\hfill
+  \begin{minipage}[t]{0.44\textwidth}\centering
+    \includegraphics[width=\linewidth]{fig/光路图.png}\\
+    （e）光路图
   \end{minipage}
-  \caption{光盘光谱仪装置及消色差透镜实拍。}
+  \caption{光盘光谱仪装置}
   \label{fig:apparatus-1122}
 \end{figure}
 
 \subsection{实验光源}
-光源的光谱特性和亮度直接影响光谱的观察与测量。对于分辨率分析，需要使用具有分立谱线的光源，以便观察相邻谱线的分离情况，并分析谱线的宽度。实验室提供的钠灯可用于观察钠光谱，但使用条件有限，因此我们选用小氖泡作为实验光源。单个氖泡亮度有限，为获得更强的光信号，我们利用手头材料将多个氖泡并联，制作了氖泡光源，见图\ref{fig:neon-parallel-1122}。
+光源的光谱特性和亮度直接影响光谱的观察与测量。对于分辨率分析，需要使用具有分立谱线的光源，以便观察相邻谱线的分离情况，并分析谱线的宽度。实验室提供的钠灯可用于观察钠光谱，但使用条件有限，因此我们选用小氖泡作为实验光源。单个氖泡亮度有限，如图\ref{fig:neon-parallel-1122}（a）所示；为获得更强的光信号，我们利用手头材料将多个氖泡并联，制作了氖泡光源，如图\ref{fig:neon-parallel-1122}（b）、（c）所示。
 
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
   \begin{minipage}[t]{0.27\textwidth}\centering
+    \includegraphics[width=\linewidth]{fig/neon_single_lit.jpg}\\
+    （a）单个氖泡
+  \end{minipage}\hfill
+  \begin{minipage}[t]{0.27\textwidth}\centering
     \includegraphics[width=\linewidth]{fig/neon_parallel_1122.jpg}\\
-    （a）并联结构
-  \end{minipage}\hspace{1.5em}
+    （b）并联结构
+  \end{minipage}\hfill
   \begin{minipage}[t]{0.27\textwidth}\centering
     \includegraphics[width=\linewidth]{fig/neon_lit_1122.jpg}\\
-    （b）通电状态
+    （c）通电状态
   \end{minipage}
-  \caption{自制并联氖泡光源。}
+  \caption{单个氖泡与并联氖泡光源。}
   \label{fig:neon-parallel-1122}
+\end{figure}
+
+我们还对紫外灯进行了改装，作为实验中使用的另一种光源。为了避免UVC对人眼的伤害, 我们加装了灯罩, 和滤光片(CD基板成分是聚碳酸酯,可以吸收UVC). 紫外灯改装后的结构及通电发光状态如图\ref{fig:uv-lamp}所示。
+
+\begin{figure}[H]
+  \centering
+  \begin{minipage}[t]{0.27\textwidth}\centering
+    \includegraphics[width=\linewidth]{fig/uv_lamp_modified.jpg}\\
+    （a）改装后的紫外灯
+  \end{minipage}\hspace{1.5em}
+  \begin{minipage}[t]{0.27\textwidth}\centering
+    \includegraphics[width=\linewidth]{fig/uv_lamp_lit.jpg}\\
+    （b）通电发光状态
+  \end{minipage}
+  \caption{紫外灯光源。}
+  \label{fig:uv-lamp}
 \end{figure}
 
 \section{实验分析}
 \subsection{实验步骤与测量方法}
-\subsubsection{已完成的预实验}
-首先将 CD-R 和 DVD-R 放入光路，用光源照射盘面，在光屏上观察彩色光带并拍照；随后遮挡部分盘面，观察光带的变化。使用含氩小氖泡作为光源时，分别借助 CD 和 DVD 观察其色散现象。此外，还进行了光盘浸泡与印刷层剥离、DVD 分层，以及实验室氦氖激光器与透射式 CD 的观察。
-
-\subsubsection{后续光谱测量方法}
+根据之前讨论的因素, 设计控制单一变量的实验步骤.
+\subsubsection{测量方法}
 后续光谱测量拟按以下步骤进行：首先调节光源、狭缝与准直透镜，使光束照射光盘的局部区域；随后调整光盘及探测器位置，观察并记录选定级次的光谱。使用已知波长的谱线建立像素位置与波长的对应关系，再对感兴趣的谱线进行测量。
 
-研究影响因素时，可固定光源、探测器设置及其他光路参数，分别改变狭缝宽度、光盘类型和照明区域，比较谱线的位置、宽度与形状。若使用钠双线，可观察两条谱线是否能够分开，并结合标定关系计算波长间隔。
+研究影响因素时，可固定光源、探测器设置及其他光路参数，分别改变狭缝宽度、光盘类型和照明区域，比较谱线的位置、宽度与形状。
 
 测量时记录狭缝宽度、光盘类型、照明位置和相机曝光等设置。在已完成波长标定后，从图像中选取光谱区域并沿谱线长度方向积分，得到光强随波长的分布。测量孤立谱线时，可由曲线的半高全宽比较不同条件下的展宽；测量相邻谱线时，同时观察峰的位置及两峰之间的谷值，以评价谱线的分离情况。
 
 \subsection{实验测量数据与结果分析}
-\subsubsection{狭缝宽度对谱线的影响}
-使用氖泡照明，分别以较小和较大的狭缝宽度拍摄 DVD 的衍射光谱。图\ref{fig:slit-direct-1122}为光线不经过基板时的结果：两种条件下均能观察到红、黄及较弱的绿色谱线；小狭缝照片中的多条红色谱线较细，大狭缝照片中的亮线更宽、更明亮，相邻亮线之间更容易连成一片。这与狭缝缩窄可以减小狭缝像宽度、同时降低通光量的趋势一致。后续可以结合图像强度曲线比较谱线宽度，选择兼顾亮度和谱线分离的狭缝宽度。
+\subsubsection{光谱提取与波长标定}
+我们利用手机拍摄的一张氖泡衍射光谱照片提取光强曲线。程序选取包含谱线的图像条带，沿谱线方向求平均，再对红、绿、蓝通道作近似线性化并合成相对光强；对曲线平滑和寻峰后，将峰位与氖原子参考谱线进行匹配。标定时先以约 $540.056\,\mathrm{nm}$ 的绿线和 $585.249\,\mathrm{nm}$ 的黄线作为初始对应点，再利用匹配到的多条谱线进行线性拟合：
+\begin{equation}
+  \lambda=a+bx,
+  \label{eq:neon-linear-calibration}
+\end{equation}
+其中 $x$ 为原始裁剪照片中的横向像素坐标，$a$ 和 $b$ 为拟合参数。处理结果如图\ref{fig:neon1-analysis}所示，光谱中可以看到较弱的绿色谱线以及较密集的黄、红色谱线。程序匹配了 18 个候选峰，线性标定参数见表\ref{tab:neon-calibration}。
 
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
-  \begin{minipage}[t]{0.31\textwidth}\centering
-    \includegraphics[width=\linewidth]{fig/exp_1122_slit_narrow.jpg}\\
-    （a）小狭缝
-  \end{minipage}\hspace{1em}
-  \begin{minipage}[t]{0.31\textwidth}\centering
-    \includegraphics[width=\linewidth]{fig/exp_1122_slit_wide.jpg}\\
-    （b）大狭缝
-  \end{minipage}
+  \includegraphics[width=0.72\textwidth]{fig/neon1_analysis.png}
+  \caption{氖泡照片的光谱条带与光强曲线。}
+  \label{fig:neon1-analysis}
+\end{figure}
+
+\begin{table}[H]
+  \centering
+  \caption{氖泡光谱照片的线性标定结果}
+  \label{tab:neon-calibration}
+  \begin{tabular}{lc}
+    \toprule
+    参数 & 结果 \\
+    \midrule
+    $a$（nm） & 706.726 \\
+    $b$（nm/像素） & $-0.10317$ \\
+    匹配候选峰数 & 18 \\
+    拟合残差均方根（nm） & 0.356 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\subsubsection{光谱图像的算法几何校正}
+为了减小拍摄方向和光谱形状对条带提取的影响，我们对同一张氖泡照片进行几何校正：先比较不同高度处的谱线位置，拟合谱线随高度的横向偏移(程序比较不同高度处的光谱轮廓，用互相关估计它们的横向错位，再拟合一条二次曲线，把倾斜的谱线拉直)，再选取多个亮段并拟合其中心位置的变化，对图像进行坐标重映射。或者说程序先根据不同高度处光谱轮廓的横向错位，校正谱线倾斜；然后计算多个亮峰的光强中心，拟合光谱中心线，并沿中心线校正图像、截取光谱区域。校正后的光谱条带与光强曲线如图\ref{fig:neon1-rectified}所示，与校正前的图\ref{fig:neon1-analysis}对应。
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.72\textwidth]{fig/neon1_rectified_analysis.png}
+  \caption{氖泡光谱图像几何校正后的光谱条带与光强曲线。}
+  \label{fig:neon1-rectified}
+\end{figure}
+
+校正前，程序匹配 18 个候选峰，线性拟合残差均方根为 $0.356\,\mathrm{nm}$；校正后重新提取并匹配 17 个候选峰，拟合残差均方根为 $0.182\,\mathrm{nm}$。以相同参考波长附近的谱峰比较校正前后的半高全宽，结果见表\ref{tab:neon-same-line}。
+
+\begin{table}[H]
+  \centering
+  \caption{同一张氖泡照片几何校正前后的谱峰宽度}
+  \label{tab:neon-same-line}
+  \begin{tabular}{ccccc}
+    \toprule
+    参考波长 & 校正前宽度 & 校正后宽度 & 校正前 $\lambda/\Delta\lambda$ & 校正后 $\lambda/\Delta\lambda$ \\
+    （nm） & （nm） & （nm） & & \\
+    \midrule
+    594.483 & 2.75 & 2.70 & 216 & 220 \\
+    603.000 & 2.85 & 2.73 & 212 & 221 \\
+    659.895 & 1.97 & 1.92 & 336 & 343 \\
+    \bottomrule
+  \end{tabular}
+\end{table}
+
+\textbf{分辨率$\lambda/\Delta\lambda$ 有相当的提升, 可见程序的校正处理正确.}
+
+\subsubsection{狭缝宽度对谱线的影响}
+对狭缝的宽度进行测量. 由于我们没有精密的螺旋测微器, 狭缝本身又在几十到几百微米量级,所以我们选择单缝衍射法测量,如图所示 \ref{fig:xiafeng-mes}.通过测条纹间距得到缝宽
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.68\textwidth]{fig/single_slit_diffraction.jpg}
+  \caption{不同宽度狭缝对应的单缝衍射图像}
+  \label{fig:xiafeng-mes}
+\end{figure}
+
+
+
+使用氖泡照明，分别以较小和较大的狭缝宽度拍摄 DVD 的衍射光谱。图\ref{fig:slit-direct-1122}为光线不经过基板时的结果：两种条件下均能观察到红、黄及较弱的绿色谱线；小狭缝照片中的多条红色谱线较细，大狭缝照片中的亮线更宽、更明亮，相邻亮线之间更容易连成一片(展宽了)。这与狭缝缩窄可以减小狭缝像宽度、同时降低通光量的理论一致
+
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.68\textwidth]{fig/slit_width_vertical.png}
   \caption{不经过基板时，不同狭缝宽度下的 DVD 衍射光谱。}
   \label{fig:slit-direct-1122}
 \end{figure}
 
-光线经过 DVD 基板时，我们也分别拍摄了大、小狭缝的光谱，如图\ref{fig:slit-substrate-1122}所示。两张照片都能辨认出黄、红色谱线；大狭缝照片中的谱线更宽，部分亮线相互靠近。可见通过调节狭缝，能够改变光谱图中的亮线宽度和分离程度。
 
-\begin{figure}[htbp]
+对不经过基板的两张照片进行几何校正，并用参考谱线建立各自的波长尺度，得到图\ref{fig:slit-spectra-comparison}和图\ref{fig:slit-spectra-wide}。
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.72\textwidth]{fig/slit_narrow_spectrum.png}
+  \caption{不经过基板时小狭缝的氖泡光谱。}
+  \label{fig:slit-spectra-comparison}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.72\textwidth]{fig/slit_wide_spectrum.png}
+  \caption{不经过基板时大狭缝的氖泡光谱。}
+  \label{fig:slit-spectra-wide}
+\end{figure}
+
+光线经过 DVD 基板时，我们也分别拍摄了大、小狭缝的光谱，如图\ref{fig:slit-substrate-1122}所示。当缝宽过大时, 分辨率显著下降
+\begin{figure}[H]
   \centering
   \begin{minipage}[t]{0.31\textwidth}\centering
     \includegraphics[width=\linewidth]{fig/exp_1122_substrate_narrow.jpg}\\
@@ -520,39 +693,46 @@ F--P 干涉仪的相邻透射峰之间具有有限的自由光谱范围。宽波
   \label{fig:slit-substrate-1122}
 \end{figure}
 
-\subsubsection{光盘种类和基板对光谱的影响}
-使用手电筒照明，在小狭缝条件下分别拍摄 CD-R 和 DVD 的彩色光带，并对比光线经过和不经过基板的情况，见图\ref{fig:disc-substrate-1122}。CD-R 的两张照片中均可看到从蓝、绿到红的色散光带；DVD 的照片中也能看到多种颜色沿不同方向展开。两种光盘的光谱展开形态不同，说明更换光盘后需要重新调整光盘和手机的相对位置，以便接收感兴趣的波段。
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.72\textwidth]{fig/substrate_narrow_spectrum.png}
+  \caption{经过基板时小狭缝的氖泡光谱。}
+  \label{fig:slit-substrate-profiles}
+\end{figure}
 
-同一种光盘的两种基板条件下，照片中的光带位置、形状和背景均有变化。实验中可以通过翻转或处理光盘，选择适合观察的入射一侧；在进一步比较谱线清晰度时，还应固定光源、拍摄位置和曝光设置。
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.72\textwidth]{fig/substrate_wide_spectrum.png}
+  \caption{经过基板时大狭缝的氖泡光谱。}
+  \label{fig:slit-substrate-wide}
+\end{figure}
 
-\begin{figure}[htbp]
+\textbf{所以我们应该尽量使狭缝变窄,能提高分辨率, 但代价是需要更长的曝光时间}
+
+\subsubsection{光盘基板对光谱的影响}
+理论上来说,因为反射层在基板层底部,光线若是直接透过基板层到反射层分光之后再射出,由于两个表面都会有反射,所以会出现鬼影现象.我们也确实观察到了这一点
+
+使用手电筒照明，拍摄 CD 的彩色光带，并对比光线经过和不经过基板的情况，见图\ref{fig:disc-substrate-1122}。对比发现,经过基板出现了旁边的幻影.
+
+\textbf{所以光谱仪中应该避免直接使用含有基板层的光盘,而是应该得到裸露的反射层再使用}
+
+\begin{figure}[H]
   \centering
   \begin{minipage}[t]{0.28\textwidth}\centering
     \includegraphics[width=\linewidth]{fig/exp_1122_cd_direct.jpg}\\
-    （a）CD-R，不经过基板
+    （a）不经过基板
   \end{minipage}\hspace{1em}
   \begin{minipage}[t]{0.28\textwidth}\centering
     \includegraphics[width=\linewidth]{fig/exp_1122_cd_substrate.jpg}\\
-    （b）CD-R，经过基板
+    （b）经过基板
   \end{minipage}
-
-  \smallskip
-  \begin{minipage}[t]{0.28\textwidth}\centering
-    \includegraphics[width=\linewidth]{fig/exp_1122_dvd_direct.jpg}\\
-    （c）DVD，不经过基板
-  \end{minipage}\hspace{1em}
-  \begin{minipage}[t]{0.28\textwidth}\centering
-    \includegraphics[width=\linewidth]{fig/exp_1122_dvd_substrate.jpg}\\
-    （d）DVD，经过基板
-  \end{minipage}
-  \caption{手电筒照明下 CD-R、DVD 及基板条件的对比。}
   \label{fig:disc-substrate-1122}
 \end{figure}
 
 \subsubsection{透镜位置与光谱成像}
-在小狭缝、光线经过 DVD 基板的条件下，我们还加入消色差透镜进行准直，结果见图\ref{fig:lens-adjust-1122}。未加透镜时可看到一组红、黄色谱线；加入透镜的这次记录中，透镜光轴存在倾斜，画面中仍可看到部分红、黄和绿色光带。透镜的位置和方向会影响入射光束以及手机接收到的光谱，装调时需要调整狭缝与透镜的相对位置，并使透镜对准光盘照明区域，再比较谱线的清晰程度。
+在小狭缝、光线经过 DVD 基板的条件下，我们还加入消色差透镜(双胶合透镜)进行准直，结果见图\ref{fig:lens-adjust-1122}。未加透镜时可看到一组红、黄色谱线；加入透镜的这次记录中，透镜光轴存在倾斜，画面中仍可看到部分红、黄和绿色光带。透镜的位置和方向会影响入射光束以及手机接收到的光谱，装调时需要调整狭缝与透镜的相对位置，并使透镜对准光盘照明区域，再比较谱线的清晰程度。
 
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
   \begin{minipage}[t]{0.31\textwidth}\centering
     \includegraphics[width=\linewidth]{fig/exp_1122_substrate_narrow.jpg}\\
@@ -560,16 +740,32 @@ F--P 干涉仪的相邻透射峰之间具有有限的自由光谱范围。宽波
   \end{minipage}\hspace{1em}
   \begin{minipage}[t]{0.31\textwidth}\centering
     \includegraphics[width=\linewidth]{fig/exp_1122_lens_tilt.jpg}\\
-    （b）加入透镜，光轴倾斜
+    （b）加入透镜
   \end{minipage}
   \caption{DVD 光谱观察中加入透镜前后的照片。}
   \label{fig:lens-adjust-1122}
 \end{figure}
 
-\subsubsection{钠灯与曝光设置}
-我们还使用实验室钠灯拍摄了光谱，如图\ref{fig:sodium-exposure-1122}所示。两次拍摄均出现明显的黄色亮线；其中一张亮线中心发白、周围泛光较强，另一张的黄色亮线轮廓更清楚。调整曝光有助于避免强谱线过曝，并保留其附近的图像细节。钠灯照片为后续的波长标定和钠双线观察提供了实验基础。
+对这两张照片进行光谱条带提取，得到图\ref{fig:lens-before-spectrum}和图\ref{fig:lens-after-spectrum}。两图使用各自照片的像素位置作为横坐标，可以对照光谱条带和相应的光强曲线，观察透镜调节前后的谱线形状。
 
-\begin{figure}[htbp]
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.72\textwidth]{fig/substrate_narrow_spectrum.png}
+  \caption{未加准直透镜时的氖泡光谱。}
+  \label{fig:lens-before-spectrum}
+\end{figure}
+
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=0.72\textwidth]{fig/lens_tilt_spectrum.png}
+  \caption{加入透镜且光轴倾斜时的氖泡光谱。}
+  \label{fig:lens-after-spectrum}
+\end{figure}
+综上, 我们的结论是: \textbf{使用透镜准直会增加光路复杂性, 更不利于组装, 且光轴未对齐时,效果反而不如不加}
+\subsubsection{曝光设置}
+我们还使用实验室钠灯拍摄了光谱，如图\ref{fig:sodium-exposure-1122}所示。两次拍摄均出现明显的黄色亮线；其中一张亮线中心发白、周围泛光较强，另一张的黄色亮线轮廓更清楚。调整曝光有助于避免强谱线过曝，并保留其附近的图像细节。
+
+\begin{figure}[H]
   \centering
   \begin{minipage}[t]{0.31\textwidth}\centering
     \includegraphics[width=\linewidth]{fig/exp_1122_sodium_a.jpg}\\
@@ -583,99 +779,87 @@ F--P 干涉仪的相邻透射峰之间具有有限的自由光谱范围。宽波
   \label{fig:sodium-exposure-1122}
 \end{figure}
 
-\subsubsection{蓝光光盘的观察范围}
-蓝光光盘的不同观察方向呈现出不同颜色的光带，如图\ref{fig:bd-range-1122}所示：依次可以看到以蓝色为主、蓝绿共存、以绿色为主的区域；手电筒照明照片也显示出局部彩色光带。实验记录中，继续改变观察角度会受到装置空间限制。调整光盘角度和手机观察位置，可以选择接收到的波段；为了记录更宽范围的光谱，需要为衍射光和相机留出足够的角度空间。
+两张钠灯照片经几何校正和光谱条带提取后，得到图\ref{fig:sodium-exposure-profiles}和图\ref{fig:sodium-exposure-bright}中的光强曲线。以钠黄线中心的 $589.3\,\mathrm{nm}$ 和暂按汞绿线判断的 $546.1\,\mathrm{nm}$\cite{nist_mercury} 为参考点，分别对两张照片进行线性波长标定。较亮曝光的黄峰出现饱和平台，标定时取平台中点；过曝使峰顶细节丢失，谱线展宽也使相邻谱线更难分辨。但是低曝光也让弱谱线不可见
 
-\begin{figure}[htbp]
+\textbf{所以我们曝光时间应该尽量尽量大, 但是 又不让最亮的峰过曝为宜}
+
+\begin{figure}[H]
   \centering
-  \begin{minipage}[t]{0.28\textwidth}\centering
-    \includegraphics[width=\linewidth]{fig/exp_1122_bd_blue.jpg}\\
-    （a）蓝色区域
-  \end{minipage}\hspace{1em}
-  \begin{minipage}[t]{0.28\textwidth}\centering
-    \includegraphics[width=\linewidth]{fig/exp_1122_bd_blue_green.jpg}\\
-    （b）蓝绿区域
-  \end{minipage}
-
-  \smallskip
-  \begin{minipage}[t]{0.28\textwidth}\centering
-    \includegraphics[width=\linewidth]{fig/exp_1122_bd_green.jpg}\\
-    （c）绿色区域
-  \end{minipage}\hspace{1em}
-  \begin{minipage}[t]{0.28\textwidth}\centering
-    \includegraphics[width=\linewidth]{fig/exp_1122_bd_partial.jpg}\\
-    （d）手电筒照明
-  \end{minipage}
-  \caption{蓝光光盘在不同观察位置的色散现象。}
-  \label{fig:bd-range-1122}
+  \includegraphics[width=0.62\textwidth]{fig/sodium_dim_spectrum.png}
+  \caption{较暗曝光下钠灯的光谱条带与光强曲线。}
+  \label{fig:sodium-exposure-profiles}
 \end{figure}
 
-\subsubsection{零级像与不同衍射级次}
-图\ref{fig:orders-1122}（a）记录了 DVD 的零级亮像；图（b）中 CD 上不同级次的彩色光带相互交叠，实验记录将其中一处标记为二级紫光与三级红光重合。不同级次的光可能进入相近方向，因此选择拍摄位置和光谱级次时，需要考虑级次重叠对光谱辨认的影响。
-
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
-  \begin{minipage}[t]{0.31\textwidth}\centering
-    \includegraphics[width=\linewidth]{fig/exp_1122_zero_order.jpg}\\
-    （a）DVD 零级亮像
-  \end{minipage}\hspace{1em}
-  \begin{minipage}[t]{0.31\textwidth}\centering
+  \includegraphics[width=0.62\textwidth]{fig/sodium_bright_spectrum.png}
+  \caption{较亮曝光下钠灯的光谱条带与光强曲线。}
+  \label{fig:sodium-exposure-bright}
+\end{figure}
+
+\subsubsection{衍射级次的选择}
+图\ref{fig:orders-1122}中 CD 上不同级次的彩色光带相互交叠，因为二级紫光与三级红光重合。不同级次的光进入相近方向，因此我们只能选择一级衍射光.
+
+\begin{figure}[H]
+  \centering
+  \begin{minipage}[t]{0.51\textwidth}\centering
     \includegraphics[width=\linewidth]{fig/exp_1122_cd_overlap.jpg}\\
-    （b）CD 不同级次光带
+    CD 不同级次光带
   \end{minipage}
-  \caption{零级亮像和 CD 上不同衍射级次的光带。}
+  \caption{ CD 上不同衍射级次的光带。}
   \label{fig:orders-1122}
 \end{figure}
 
-\subsubsection{环状光斑图像的径向分析}
-对已有的环状光斑照片，预处理记录给出了以光斑中心为参考的径向 RGB 通道数据。图\ref{fig:radial-analysis}（a）显示所用照片及径向位置标记，（b）为根据已有数据绘制的各通道数值随半径的变化。不同颜色通道的变化趋势不同，与照片中光带颜色随半径变化的现象相对应。
+\subsubsection{光盘型号}
+作为光栅，衍射级光强主要看沟槽/坑的周期、深度、占空比和反射率。CD-R沟槽连续均匀，相位差接近半波长时奇级衍射较强、条纹清楚；CD-ROM坑长随数据变化，占空比不规则，光能被分散调制，衍射级偏弱且杂乱。所以CD-ROM衍射条纹不如CD-R明显,分光效果更差
 
-\begin{figure}[htbp]
+\begin{figure}[H]
   \centering
-  \begin{minipage}[c]{0.48\textwidth}\centering
-    \includegraphics[width=\linewidth]{fig/pre_radial_image.png}\\
-    （a）环状光斑及分析区域
+  \begin{minipage}[t]{0.43\textwidth}\centering
+    \includegraphics[width=\linewidth,keepaspectratio]{fig/cd-r 强.png}\\
+    （a）CD-R
   \end{minipage}\hfill
-  \begin{minipage}[c]{0.49\textwidth}\centering
-    \includegraphics[width=\linewidth]{fig/pre_radial.pdf}\\
-    （b）径向 RGB 通道曲线
+  \begin{minipage}[t]{0.43\textwidth}\centering
+    \includegraphics[width=\linewidth,keepaspectratio]{fig/cd-rom-弱.png}\\
+    （b）CD-ROM
   \end{minipage}
-  \caption{预实验光斑照片的径向分析。横坐标为距图像中心的像素距离，纵坐标为已有处理结果中的平均通道数值。}
-  \label{fig:radial-analysis}
+  \caption{CD-R 与 CD-ROM 的衍射条纹}
+  \label{fig:cd-r-rom-diffraction}
 \end{figure}
 
-从已有径向数据中选取三个位置，结果见表\ref{tab:rgb-profile}。例如，在半径 $149.5$ 像素处蓝色通道数值较高；在 $219.5$ 像素处，绿色通道数值相对升高。这与图中不同半径处的颜色变化相对应。
 
-\begin{table}[htbp]
-  \centering
-  \caption{环状光斑径向图像数据示例}
-  \label{tab:rgb-profile}
-  \begin{tabular}{cccc}
-    \toprule
-    半径（像素） & R & G & B \\
-    \midrule
-    149.5 & 0.3819 & 0.3912 & 0.5995 \\
-    219.5 & 0.4067 & 0.4637 & 0.5036 \\
-    249.5 & 0.4189 & 0.4328 & 0.4822 \\
-    \bottomrule
-  \end{tabular}
-\end{table}
 
-图像的像素距离需要结合几何关系或已知谱线进行波长标定；相机各颜色通道的响应也会影响曲线形状。后续测量可记录光源、光盘和拍摄条件，用已知谱线建立像素与波长的对应关系，再分析谱线宽度。
 
-目前已获得预实验照片、图像径向数据及光谱仪拍摄的光谱照片，后续将进行波长标定和不同条件下的测量。
+
+
+\subsection{仿真探究}
+\subsubsection{黑白/彩色相机}
+在传感器尺寸、像素尺寸和其他成像条件相近时，黑白相机没有彩色滤色阵列对入射光的选择性衰减，通常有利于提高弱谱线的信号；每个像素都可用于记录照射到该处的光强。
+彩色相机能直接显示光谱颜色，便于观察和辨认，但滤色阵列会使不同波长对应的有效响应和噪声不同
+
+
+可以在光栅与成像模型之后加入探测器模型，定量比较黑白和彩色相机对谱线的记录。首先设定两条波长分别为 $\lambda_1$、$\lambda_2$ 的窄谱线，利用实测标定关系 $x(\lambda)$ 确定其在传感器上的位置；再用单条窄谱线的成像线形描述狭缝、光栅和镜头造成的展宽，得到像面光强分布 $E(x,y,\lambda)$。对第 $i$ 个像素，其平均信号可写为
+\begin{equation}
+  \mu_i=t\int_{\mathrm{pixel}\,i}\!\int E(x,y,\lambda)\,Q_i(\lambda)\,\mathrm{d}\lambda\,\mathrm{d}x\,\mathrm{d}y,
+  \label{eq:camera-simulation}
+\end{equation}
+其中 $t$ 为曝光时间，$Q_i(\lambda)$ 为像素对不同波长的响应；黑白像素采用相应的传感器响应，彩色相机则按实际滤色阵列分别设置不同响应。计算时再加入光子散粒噪声和读出噪声，并按照相机的数据格式生成图像；若使用彩色图像，还可分别比较原始像素数据和插值后的结果。
+
+完成模拟后，按实验中的方法对光谱图像取样并提取光强曲线，逐步减小两条谱线的波长间隔，比较两峰之间的谷深、峰位以及可分辨的最小间隔。对单条窄谱线，也可比较半高全宽和信噪比。重复改变两条谱线落在像素上的相对位置，可以观察采样相位对结果的影响。
+
+
 
 \section{研究结论}
 \subsection{理论分析结论}
 光盘上的周期轨道可以作为衍射光栅，使不同波长的光沿不同方向传播。光栅轨距、入射角和衍射级次共同决定衍射方向，照明区域的轨道曲率会影响光谱形状。减小狭缝宽度可以降低狭缝带来的谱线展宽，同时会减少进入光谱仪的光通量。
 
-分辨率的测量和优化将在后续实验中开展。
+氖泡照片已用于初步估计谱线宽度，仪器分辨能力的验证和优化将在后续实验中开展。
 
 \subsection{实验结论}
 预实验中，CD-R 和 DVD-R 受光照后在光屏上形成彩色光带；遮挡部分盘面后，观察到局部弧形光带。对环状光斑照片的径向分析显示，不同半径处的 RGB 通道数值存在变化。使用固定结构的光谱仪拍摄到氖泡和钠灯光谱，并比较了狭缝宽度、基板、光盘种类及观察位置对光谱图像的影响。小狭缝照片中的谱线较细，大狭缝照片中的亮线较宽；蓝光光盘的可观察波段随观察位置变化。
 
 \subsection{理论与实验对比}
-光栅色散理论预示不同波长沿不同方向传播，盘面轨道方向的变化会改变局部色散方向；预实验中观察到的彩色环状光带及遮挡后的局部弧带，与这一图像在定性上相符。目前已搭建光谱仪并拍摄到衍射光谱。后续将通过已知谱线进行波长标定，并测量不同狭缝宽度及照明区域下的谱线宽度，评价仪器的实际分辨能力。
+光栅色散理论预示不同波长沿不同方向传播，盘面轨道方向的变化会改变局部色散方向；预实验中观察到的彩色环状光带及遮挡后的局部弧带，与这一图像在定性上相符。目前已搭建光谱仪并拍摄到衍射光谱。已利用已知氖谱线对光谱照片进行初步波长标定；后续将检验标定，并测量不同狭缝宽度及照明区域下的谱线宽度，评价仪器的实际分辨能力。
 
 \section{团队分工}
 两位成员共同参与课题原理分析、预实验、实验及讨论，并根据汇报和文稿工作有所侧重。
@@ -692,6 +876,7 @@ F--P 干涉仪的相邻透射峰之间具有有限的自由光谱范围。宽波
 \end{table}
 
 \begin{thebibliography}{99}
+\bibitem{nist_mercury} NIST. Strong Lines of Mercury (Hg)[EB/OL]. \url{https://physics.nist.gov/PhysRefData/Handbook/Tables/mercurytable2.htm}.
 \bibitem{yuan2023} Yuan S F, Ma C, Fetaya E, et al. Geometric deep optical sensing[J]. \textit{Science}, 2023, 379(6637): eade1220. \url{https://doi.org/10.1126/science.ade1220}.
 \bibitem{wang2025} Wang F K, Fang S, Zhang Y, Wang Q J. 2D computational photodetectors enabling multidimensional optical information perception[J]. \textit{Nature Communications}, 2025, 16: 6791. \url{https://doi.org/10.1038/s41467-025-61924-6}.
 \bibitem{yang2021} Yang Z Y, Albrow-Owen T, Cai W W, Hasan T. Miniaturization of optical spectrometers[J]. \textit{Science}, 2021, 371(6528): eabe0722. \url{https://doi.org/10.1126/science.abe0722}.
@@ -713,6 +898,8 @@ F--P 干涉仪的相邻透射峰之间具有有限的自由光谱范围。宽波
 \bibitem{theremino_construction} Theremino System. \textit{Theremino Spectrometer: Construction with WebCam}[EB/OL]. \url{https://www.theremino.com/wp-content/uploads/files/Theremino_Spectrometer_Construction_WebCam_ENG.pdf}.
 \bibitem{theremino_software} Theremino System. Theremino Spectrometer[EB/OL]. \url{https://www.theremino.com/en/downloads/automation#spectrometer}.
 \bibitem{theremino_help} Theremino System. \textit{Theremino Spectrometer Help}[EB/OL]. \url{https://www.theremino.com/wp-content/uploads/files/Theremino_Spectrometer_Help_ENG.pdf}.
+\bibitem{basler_bayer} Basler. What Role Does Color Play in Image Processing?[EB/OL]. \url{https://www.baslerweb.com/en/learning/color-image-processing/}.
+\bibitem{basler_demosaic} Basler. Handling Missing Pixel Values Caused By Debayering[EB/OL]. \url{https://docs.baslerweb.com/knowledge/handling-missing-pixel-values-caused-by-debayering}.
 \end{thebibliography}
 \end{document}
 
